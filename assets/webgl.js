@@ -1,24 +1,149 @@
-/* Sân khấu biển: 1 quad, sóng Gerstner rút gọn, cá heo nhảy theo nhịp 8 giây rồi nghỉ. */
+/* Sóng Phú Quốc — ngân sách pixel thấp, dừng khi khuất / tab ẩn. */
 (function () {
   if (window.__gsSea) return;
-  var canvas = document.getElementById('seaStage');
+  var canvas = document.getElementById("seaStage");
   if (!canvas) return;
   window.__gsSea = true;
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var gl = canvas.getContext('webgl', {alpha:false, antialias:false, depth:false, stencil:false, powerPreference:'high-performance', preserveDrawingBuffer:false});
+
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var mobile = matchMedia("(max-width: 768px)").matches || matchMedia("(pointer: coarse)").matches;
+  var saveData = navigator.connection && navigator.connection.saveData;
+  if (reduce || saveData) {
+    canvas.style.background = "linear-gradient(#0b3a5c,#071422)";
+    return;
+  }
+
+  var gl = canvas.getContext("webgl", {
+    alpha: false,
+    antialias: false,
+    depth: false,
+    stencil: false,
+    desynchronized: true,
+    powerPreference: "low-power",
+    preserveDrawingBuffer: false,
+    failIfMajorPerformanceCaveat: false
+  });
   if (!gl) return;
-  var vs = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}';
-  var fs = ['precision mediump float;','uniform vec2 uR;uniform float uT;uniform float uM;','float wave(float x,float t){float w=sin(x*1.7+t*0.85)*0.045;w+=sin(x*3.1-t*1.15)*0.022;w+=sin(x*5.4+t*0.55)*0.01;return w;}','float ell(vec2 p,vec2 r){p/=r;return (length(p)-1.0)*min(r.x,r.y);}','void main(){','vec2 uv=(gl_FragCoord.xy/uR)*2.0-1.0; uv.x*=uR.x/max(uR.y,1.0);','float t=uT*uM;','vec3 sky=mix(vec3(0.03,0.09,0.16),vec3(0.05,0.28,0.48),smoothstep(-0.2,0.85,uv.y));','sky+=vec3(0.35,0.62,0.85)*exp(-pow(uv.x+0.15,2.0)*1.4)*exp(-pow(uv.y-0.42,2.0)*3.0)*0.35;','float seaY=-0.18+wave(uv.x,t);','float sea=smoothstep(seaY+0.012,seaY-0.02,uv.y);','vec3 water=mix(vec3(0.0,0.28,0.48),vec3(0.02,0.10,0.22),smoothstep(seaY,seaY-0.7,uv.y));','float crest=smoothstep(0.02,0.0,abs(uv.y-seaY));','water+=vec3(0.75,0.9,1.0)*crest*0.55;','vec3 col=mix(sky,water,sea);','float cyc=mod(t,8.0);','float u=clamp(cyc/2.55,0.0,1.0);','float up=sin(u*3.14159);','vec2 dp=vec2(mix(-0.92,0.95,u),-0.16+up*0.58);','float ang=cos(u*3.14159)*0.85;','float ca=cos(ang),sa=sin(ang);','vec2 q=uv-dp; q=vec2(ca*q.x+sa*q.y,-sa*q.x+ca*q.y);','float body=ell(q,vec2(0.20,0.055));','float nose=ell(q-vec2(0.16,0.012),vec2(0.07,0.022));','vec2 tq=q-vec2(-0.16,0.0);','float flap=sin(t*7.0)*0.35*(0.35+0.65*up);','float c2=cos(flap),s2=sin(flap);','vec2 f1=vec2(c2*tq.x+s2*tq.y,-s2*tq.x+c2*tq.y);','float tail=ell(f1-vec2(-0.07,0.045),vec2(0.075,0.018));','float tail2=ell(f1-vec2(-0.06,-0.03),vec2(0.06,0.016));','float fin=ell(q-vec2(-0.02,0.05),vec2(0.045,0.028));','float d=min(min(body,nose),min(tail,min(tail2,fin)));','float show=1.0-smoothstep(2.45,2.7,cyc);','if(uM<0.5){show=1.0;}','float mask=smoothstep(0.012,0.0,d)*show;','vec3 skin=mix(vec3(0.75,0.9,0.98),vec3(0.0,0.55,0.82),smoothstep(-0.04,0.06,q.y));','col=mix(col,skin,mask);','float eye=smoothstep(0.012,0.0,length(q-vec2(0.10,0.018)));','col=mix(col,vec3(0.04,0.08,0.12),eye*show);','float splash=exp(-abs(uv.x-dp.x)*18.0)*exp(-abs(uv.y+0.16)*22.0)*show*(step(u,0.12)+step(0.88,u));','col+=vec3(0.8,0.92,1.0)*splash*0.7;','gl_FragColor=vec4(col,1.0);}'].join('\n');
-  function sh(type, src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
-  var prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,vs));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))return;gl.useProgram(prog);
-  var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
-  var loc=gl.getAttribLocation(prog,'a');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-  var uR=gl.getUniformLocation(prog,'uR'),uT=gl.getUniformLocation(prog,'uT'),uM=gl.getUniformLocation(prog,'uM');
-  var mobile=matchMedia('(max-width: 768px)').matches,dprCap=mobile?1.25:1.5,frameMs=mobile?1000/30:1000/45,w=0,h=0,running=!document.hidden,last=0,acc=0,t0=performance.now();
-  function resize(){var dpr=Math.min(window.devicePixelRatio||1,dprCap);var nw=Math.max(1,Math.floor(canvas.clientWidth*dpr));var nh=Math.max(1,Math.floor(canvas.clientHeight*dpr));if(nw===w&&nh===h)return;w=nw;h=nh;canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}
-  function draw(now){gl.uniform2f(uR,w,h);gl.uniform1f(uT,(now-t0)/1000);gl.uniform1f(uM,reduce?0:1);gl.drawArrays(gl.TRIANGLES,0,6);}
-  function loop(now){if(!running)return;requestAnimationFrame(loop);acc+=now-last;last=now;if(acc<frameMs)return;acc=0;resize();draw(now);}
-  resize();draw(performance.now());if(!reduce){last=performance.now();requestAnimationFrame(loop);}
-  document.addEventListener('visibilitychange',function(){running=!document.hidden&&!reduce;if(running){last=performance.now();requestAnimationFrame(loop);}});
-  window.addEventListener('resize',resize,{passive:true});
+
+  var vs = "attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}";
+  var fs = [
+    "precision lowp float;",
+    "uniform vec2 uR;",
+    "uniform vec4 uP;",
+    "uniform vec4 uD;",
+    "void main(){",
+    "  vec2 uv=gl_FragCoord.xy/uR; uv=uv*2.0-1.0; uv.x*=uR.x/uR.y;",
+    "  float w=sin(uv.x*1.6+uP.x)*0.04;",
+    "  float seaY=-0.18+w;",
+    "  float sea=clamp((seaY+0.02-uv.y)*22.0,0.0,1.0);",
+    "  vec3 col=mix(vec3(0.04,0.16,0.32),vec3(0.02,0.08,0.16),uv.y);",
+    "  col=mix(col,mix(vec3(0.0,0.32,0.52),vec3(0.01,0.08,0.18),clamp((seaY-uv.y)*1.4,0.0,1.0)),sea);",
+    "  col+=vec3(0.55,0.75,0.9)*clamp(1.0-abs(uv.y-seaY)*36.0,0.0,1.0)*0.28*sea;",
+    "  vec2 q=uv-uD.xy;",
+    "  if(uD.w>0.01 && abs(q.x)<0.32 && abs(q.y)<0.2){",
+    "    vec2 b=q/vec2(0.2,0.055);",
+    "    float d=dot(b,b)-1.0;",
+    "    col=mix(col,vec3(0.82,0.93,0.98),clamp(1.0-d*8.0,0.0,1.0)*uD.w);",
+    "  }",
+    "  gl_FragColor=vec4(col,1.0);",
+    "}"
+  ].join("");
+
+  function compile(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  var prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, "a");
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  var uR = gl.getUniformLocation(prog, "uR");
+  var uP = gl.getUniformLocation(prog, "uP");
+  var uD = gl.getUniformLocation(prog, "uD");
+
+  var dprCap = mobile ? 0.75 : 1;
+  var pixelCap = mobile ? 70000 : 180000;
+  var frameMs = mobile ? 1000 / 18 : 1000 / 28;
+  var w = 0, h = 0, onScreen = true, running = false, last = 0, acc = 0, t0 = 0, resizeTimer = 0;
+
+  function pose(t) {
+    var cyc = t % 9;
+    if (cyc > 2.4) return [0, -0.4, 0, 0];
+    var u = cyc / 2.3;
+    var up = Math.sin(u * Math.PI);
+    return [(-0.9 + 1.8 * u), (-0.16 + up * 0.5), 0.4, 1];
+  }
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+    var nw = Math.max(1, Math.floor(canvas.clientWidth * dpr));
+    var nh = Math.max(1, Math.floor(canvas.clientHeight * dpr));
+    if (nw * nh > pixelCap) {
+      var s = Math.sqrt(pixelCap / (nw * nh));
+      nw = Math.max(1, Math.floor(nw * s));
+      nh = Math.max(1, Math.floor(nh * s));
+    }
+    if (nw === w && nh === h) return;
+    w = nw; h = nh;
+    canvas.width = w; canvas.height = h;
+    gl.viewport(0, 0, w, h);
+  }
+  function draw(now) {
+    if (!w || !h) return;
+    var t = (now - t0) / 1000;
+    var p = pose(t);
+    gl.uniform2f(uR, w, h);
+    gl.uniform4f(uP, t * 0.7, 0, 0, 0);
+    gl.uniform4f(uD, p[0], p[1], p[2], p[3]);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+  function loop(now) {
+    if (!running) return;
+    requestAnimationFrame(loop);
+    acc += now - last;
+    last = now;
+    if (acc < frameMs) return;
+    acc = 0;
+    draw(now);
+  }
+  function sync() {
+    var want = !document.hidden && onScreen;
+    if (want && !running) {
+      running = true;
+      last = performance.now();
+      if (!t0) t0 = last;
+      requestAnimationFrame(loop);
+    } else if (!want) running = false;
+  }
+  function boot() {
+    resize();
+    t0 = performance.now();
+    draw(t0);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        onScreen = !!(entries[0] && entries[0].isIntersecting);
+        sync();
+      }, { rootMargin: "0px" }).observe(canvas);
+    }
+    document.addEventListener("visibilitychange", sync);
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { resize(); if (running) draw(performance.now()); }, 200);
+    }, { passive: true });
+    canvas.addEventListener("webglcontextlost", function (e) { e.preventDefault(); running = false; }, false);
+    sync();
+  }
+  var idle = window.requestIdleCallback || function (fn) { setTimeout(fn, 400); };
+  idle(boot, { timeout: 1200 });
 })();

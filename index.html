@@ -55,8 +55,9 @@
 </script>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap"></noscript>
 <style>
 :root{
   --red:#0098EA; --reddark:#0369A1; --redsoft:#E5F4FD;
@@ -342,7 +343,7 @@ main{flex:1;padding:14px 16px 100px}
 
 /* ---------- SHOP CARDS ---------- */
 #shopList{perspective:1000px}
-.shop{
+.shop{content-visibility:auto;contain-intrinsic-size:auto 92px;
   background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);
   padding:0 14px 13px;margin-bottom:11px;box-shadow:0 3px 10px rgba(150,60,10,.07);
   overflow:hidden;transform-style:preserve-3d;
@@ -730,17 +731,25 @@ nav button[data-tab=food] .i:before{content:"Ăn"}
 nav button[data-tab=ride] .i:before{content:"Xe"}
 nav button[data-tab=buy] .i:before{content:"Hộ"}
 nav button[data-tab=orders] .i:before{content:"Đơn"}
+@media (max-width:768px),(pointer:coarse){
+  .sea{height:132px}
+  body:before{animation:none!important}
+  .hotline .ring,.hotline .hl3,.openchip,.clockrow .dot,.svc.on .ic,.bslide .em,.pill,.zdot,.mroute{animation:none!important}
+  .hsearch{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff}
+}
+html.gs-hide *,html.gs-hide *::before{animation-play-state:paused!important}
+.panel{content-visibility:auto;contain-intrinsic-size:auto 520px}
+#shopList{contain:layout style}
+.sea{contain:strict}
 </style>
 </head>
 <body>
-<div id="bgfx"><div class="grad"></div><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
-
 <header id="hdr">
   <div class="brand">
     <div class="logo"><img src="assets/logo.svg" width="52" height="52" alt="Goship123"></div>
     <div>
       <h1>Goship<span class="num">123</span></h1>
-      <div class="tag">SIÊU APP PHÚ QUỐC · ĐỒ ĂN · XE ÔM · MUA HỘ</div>
+      <div class="tag">Đồ ăn · Xe · Mua hộ · Phú Quốc</div>
     </div>
     <a class="zbtn" id="zaloHead" href="#" target="_blank" rel="noopener">Zalo</a>
     <button class="zbtn" id="langBtn" type="button">EN</button>
@@ -758,7 +767,7 @@ nav button[data-tab=orders] .i:before{content:"Đơn"}
 
   <div class="hsearch">
     <span class="ic">🔎</span>
-    <input id="shopSearch" placeholder="Hôm nay ăn gì nè? Phở, cơm tấm, bánh mì...">
+    <input id="shopSearch" placeholder="Tìm quán hoặc món">
   </div>
   <div class="clockrow">
     <span class="dot"></span>
@@ -770,7 +779,7 @@ nav button[data-tab=orders] .i:before{content:"Đơn"}
 <div class="tri"></div>
 <section class="sea" aria-label="Biển Phú Quốc">
   <canvas id="seaStage"></canvas>
-  <div class="cap"><b>Nước lớn, đơn vẫn chạy</b><span>Cá heo nhảy mỗi 8 giây — rồi biển nghỉ. Giá chốt trước khi đặt.</span></div>
+  <div class="cap"><b>Nước lớn, đơn vẫn chạy</b><span>Giá chốt trước khi đặt. Đón và trả có link Google Maps.</span></div>
 </section>
 
 
@@ -1238,7 +1247,6 @@ nav button[data-tab=orders] .i:before{content:"Đơn"}
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 /* ═══════════════ CONFIG ═══════════════ */
 const CONFIG = {
@@ -1261,9 +1269,7 @@ const CONFIG = {
 /* ═══════════════════════════════════════ */
 
 /* 📱 PWA: đăng ký service worker để cài như app (chỉ chạy khi đã deploy http/https) */
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});
-}
+/* sw.js chưa ship — bỏ register để khỏi request 404 */
 
 /* 📊 nạp Google Analytics nếu có mã */
 if(CONFIG.GA_ID){
@@ -1280,7 +1286,7 @@ document.getElementById('zaloHead').href = "https://zalo.me/"+CONFIG.ZALO_PHONE;
 /* ---------- 🌐 ĐA NGÔN NGỮ (VI ↔ EN) ---------- */
 let LANG='vi';
 const DICT={
-"SIÊU APP PHÚ QUỐC · ĐỒ ĂN · XE ÔM · MUA HỘ":"PHU QUOC SUPER APP · FOOD · RIDES · ERRANDS",
+"Đồ ăn · Xe · Mua hộ · Phú Quốc":"PHU QUOC SUPER APP · FOOD · RIDES · ERRANDS",
 "GỌI NGAY":"CALL NOW",
 "Đồ ăn":"Food","Xe ôm":"Bike ride","Gọi xe":"Rides","Mua hộ":"Buy4me","Đơn hàng":"Orders","Đơn":"Orders",
 "Gọi xe — Xe ôm & Ô tô 🛵🚗":"Book a ride — Bike & Car 🛵🚗","Chọn loại xe":"Choose vehicle","Ô tô 4 chỗ":"4-seat car","Ô tô 7 chỗ":"7-seat car",
@@ -1330,7 +1336,7 @@ const DICT={
 "💼 Tuyển đối tác Goship123":"💼 Become a Goship123 partner",
 };
 const PH={
- shopSearch:["Hôm nay ăn gì nè? Phở, cơm tấm, bánh mì...","What to eat today? Pho, com tam, banh mi..."],
+ shopSearch:["Tìm quán hoặc món","What to eat today? Pho, com tam, banh mi..."],
  foodName:["VD: Anh Tú — 09xxxxxxxx","e.g. John — 09xxxxxxxx"],
  foodAddr:["Địa chỉ nhận đồ ăn","Delivery address"],
  rideNote:["VD: đứng trước cổng chợ đêm, áo xanh...","e.g. by the night market gate, blue shirt..."],
@@ -1372,71 +1378,49 @@ document.querySelectorAll('.zdot').forEach(c=>c.addEventListener('click',()=>{
   toast((LANG==='en'?"Pickup set: ":"Điểm đón: ")+z+" 🛵");
 }));
 
-/* ---------- 🍜✨ HIỆU ỨNG 3D ---------- */
-(function(){
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const hdr=document.getElementById('hdr');
-  const foods=["🍜","🍕","🦐","🦀","🥤","🍢","🍧","🧋","🥖"];
-  /* đồ ăn rơi 3D trong header — mỗi món có chiều sâu (--z), món xa nhỏ + mờ hơn */
-  for(let i=0;i<10;i++){
-    const s=document.createElement('span');s.className='fall';
-    s.textContent=foods[i%foods.length];
-    const z=Math.round(-140+Math.random()*220);           // độ sâu -140px..80px
-    s.style.setProperty('--z',z+"px");
-    s.style.left=(4+Math.random()*90)+"%";
-    s.style.fontSize=(13+(z+140)/220*9)+"px";             // gần to, xa nhỏ
-    if(z<-60)s.style.filter="blur(1px) drop-shadow(0 3px 4px rgba(0,0,0,.3))"; // xa thì mờ
-    s.style.animationDuration=(8+Math.random()*7)+"s";
-    s.style.animationDelay=(Math.random()*9)+"s";
-    hdr.appendChild(s);
-  }
-  for(let i=0;i<7;i++){
-    const s=document.createElement('span');s.className='spark';s.textContent="✨";
-    s.style.left=(3+Math.random()*92)+"%";
-    s.style.top=(8+Math.random()*75)+"%";
-    s.style.animationDuration=(2+Math.random()*2.5)+"s";
-    s.style.animationDelay=(Math.random()*3)+"s";
-    hdr.appendChild(s);
-  }
-  /* 🌐 lớp 3D rơi TOÀN TRANG — vài món lộn nhào nhẹ nhàng, mờ để không che chữ */
-  const bg=document.createElement('div');bg.className='bg3d';bg.setAttribute('aria-hidden','true');
-  const drops=["🥥","🍍","🍋","⭐","🍀","🛵","🦐","🍕"];
-  for(let i=0;i<8;i++){
-    const s=document.createElement('span');
-    s.textContent=drops[i%drops.length];
-    const depth=Math.random();                             // 0 xa .. 1 gần
-    s.style.left=(2+Math.random()*94)+"%";
-    s.style.fontSize=(12+depth*14)+"px";
-    s.style.opacity=(0.18+depth*0.22).toFixed(2);          // rất nhẹ, không rối mắt
-    if(depth<0.4)s.style.filter="blur(1.2px)";
-    s.style.animationDuration=(14+Math.random()*12)+"s";
-    s.style.animationDelay=(-Math.random()*20)+"s";        // delay âm → rải sẵn khắp màn
-    bg.appendChild(s);
-  }
-  document.body.appendChild(bg);
-})();
+/* hiệu ứng rơi emoji đã bỏ — composite thừa, CSS đã ẩn */
 
 /* ---------- 🖼️ BANNER TỰ CHẠY ---------- */
-let bIdx=0;
-setInterval(()=>{
+let bIdx=0, bOn=true;
+var bTrack=document.getElementById('btrack');
+var bDots=document.querySelectorAll('#bdots span');
+function stepBanner(){
+  if(!bOn||document.hidden||!bTrack) return;
   bIdx=(bIdx+1)%5;
-  document.getElementById('btrack').style.transform=`translateX(-${bIdx*100}%)`;
-  document.querySelectorAll('#bdots span').forEach((d,i)=>d.classList.toggle('on',i===bIdx));
-},4200);
+  bTrack.style.transform='translateX(-'+bIdx*100+'%)';
+  for(var i=0;i<bDots.length;i++) bDots[i].classList.toggle('on',i===bIdx);
+}
+setInterval(stepBanner,4800);
+if('IntersectionObserver' in window && bTrack){
+  new IntersectionObserver(function(es){bOn=!!(es[0]&&es[0].isIntersecting);},{rootMargin:'40px'}).observe(bTrack.parentElement||bTrack);
+}
+document.addEventListener('visibilitychange',function(){
+  document.documentElement.classList.toggle('gs-hide',document.hidden);
+});
 
 /* ---------- ⏰ ĐỒNG HỒ + MỞ CỬA ---------- */
 const DAYS_VN=["Chủ nhật","Thứ hai","Thứ ba","Thứ tư","Thứ năm","Thứ sáu","Thứ bảy"];
 const DAYS_EN=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var clockEl=document.getElementById('clock'), dateEl=document.getElementById('dateStr'), chipEl=document.getElementById('openChip');
+var lastDay=-1, lastOpen=null;
+function pad2(n){return n<10?'0'+n:''+n}
 function tick(){
-  const n=new Date();
-  document.getElementById('clock').textContent=n.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const days=(typeof LANG!=='undefined'&&LANG==='en')?DAYS_EN:DAYS_VN;
-  document.getElementById('dateStr').textContent=`${days[n.getDay()]}, ${n.getDate()}/${n.getMonth()+1}`;
-  const open=n.getHours()>=CONFIG.OPEN_HOUR&&n.getHours()<CONFIG.CLOSE_HOUR;
-  const chip=document.getElementById('openChip');
-  const en=(typeof LANG!=='undefined'&&LANG==='en');
-  chip.textContent=open?(en?"● OPEN NOW":"● ĐANG MỞ CỬA"):(en?`CLOSED — opens ${CONFIG.OPEN_HOUR}:00`:`ĐÓNG — mở ${CONFIG.OPEN_HOUR}:00`);
-  chip.classList.toggle('closed',!open);
+  if(document.hidden) return;
+  var n=new Date(), h=n.getHours();
+  clockEl.textContent=pad2(h)+':'+pad2(n.getMinutes())+':'+pad2(n.getSeconds());
+  var day=n.getDay();
+  if(day!==lastDay){
+    lastDay=day;
+    var days=(typeof LANG!=='undefined'&&LANG==='en')?DAYS_EN:DAYS_VN;
+    dateEl.textContent=days[day]+', '+n.getDate()+'/'+(n.getMonth()+1);
+  }
+  var open=h>=CONFIG.OPEN_HOUR&&h<CONFIG.CLOSE_HOUR;
+  if(open!==lastOpen){
+    lastOpen=open;
+    var en=(typeof LANG!=='undefined'&&LANG==='en');
+    chipEl.textContent=open?(en?"● OPEN NOW":"● ĐANG MỞ CỬA"):(en?"CLOSED — opens "+CONFIG.OPEN_HOUR+":00":"ĐÓNG — mở "+CONFIG.OPEN_HOUR+":00");
+    chipEl.classList.toggle('closed',!open);
+  }
 }
 tick();setInterval(tick,1000);
 
@@ -1477,7 +1461,7 @@ fetch("https://api.open-meteo.com/v1/forecast?latitude=10.2899&longitude=103.984
   else{document.getElementById('weather').style.display='none';}
 });
 }
-loadWeather(2);
+(window.requestIdleCallback||function(fn){setTimeout(fn,900)})(function(){loadWeather(1);},{timeout:1800});
 
 /* ---------- 🍜 QUÁN THẬT TỪ GOOGLE MAPS (thêm pin:true để ghim quán trả phí lên top) ---------- */
 const SHOPS=[
@@ -1651,31 +1635,53 @@ CATS.forEach(c=>{
 
 /* ---------- FOOD LIST + SEARCH (quán pin:true tự lên top + badge 📌) ---------- */
 const shopList=document.getElementById('shopList');
-function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&","<":"<",">":">",'"':"""}[c]));} const hi=(txt,q)=>{const safe=esc(txt);if(!q)return safe;return safe.replace(new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi"),"<mark>$1</mark>");}
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"]/g, function(c){
+    var n=c.charCodeAt(0);
+    if(n===38) return "&"+"amp;";
+    if(n===60) return "&"+"lt;";
+    if(n===62) return "&"+"gt;";
+    return "&"+"quot;";
+  });
+}
+const hi=function(txt,q){
+  var safe=esc(txt);
+  if(!q) return safe;
+  var re=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
+  return safe.replace(re,"<mark>$1</mark>");
+};
+
 function renderShops(q=""){
   const ql=q.trim().toLowerCase();
-  shopList.innerHTML="";
-  let idx=0;
+  const frag=document.createDocumentFragment();
+  let idx=0, n=0;
   const list=SHOPS.map((s,si)=>({s,si})).sort((a,b)=>(b.s.pin?1:0)-(a.s.pin?1:0));
-  list.forEach(({s,si})=>{
-    if(curCat!=="Tất cả"&&s.cat!==curCat)return;
-    if(curArea!=="Toàn đảo"&&areaGroup(s.area)!==curArea)return;
+  for(var i=0;i<list.length;i++){
+    var s=list[i].s, si=list[i].si;
+    if(curCat!=="Tất cả"&&s.cat!==curCat)continue;
+    if(curArea!=="Toàn đảo"&&areaGroup(s.area)!==curArea)continue;
     const shopHit=s.name.toLowerCase().includes(ql);
     const dishes=s.dishes.map((d,di)=>({d,di})).filter(x=>!ql||shopHit||x.d[0].toLowerCase().includes(ql));
-    if(ql&&!shopHit&&!dishes.length)return;
+    if(ql&&!shopHit&&!dishes.length)continue;
     const el=document.createElement('div');el.className='shop';el.style.setProperty('--i',idx++);
-    el.innerHTML=`<div class="shop-head"><h3>${s.pin?'📌 ':''}${hi(s.name,q.trim())}</h3><span class="area">📍 ${s.area}</span></div>
-      <div class="rating">⭐ ${s.rate} · ${s.rc}${s.pin?' · <span style="color:var(--yellowdark)">TÀI TRỢ</span>':''} · <a href="${s.gm}" target="_blank" rel="noopener">Maps ↗</a></div>`+
-      dishes.map(({d,di})=>`<div class="dish"><div><div class="nm">${hi(d[0],q.trim())}</div><div class="pr">${fmt(d[1])} *</div></div><button class="addbtn" data-s="${si}" data-d="${di}">+ Thêm</button></div>`).join('');
-    shopList.appendChild(el);
-  });
-  if(!shopList.children.length)shopList.innerHTML='<div class="empty"><span class="big">🦀</span>Không tìm thấy món này...<br>Thử từ khoá khác hoặc đặt "Mua hộ" nha!</div>';
+    el.innerHTML='<div class="shop-head"><h3>'+(s.pin?'📌 ':'')+hi(s.name,q.trim())+'</h3><span class="area">📍 '+s.area+'</span></div>'+
+      '<div class="rating">⭐ '+s.rate+' · '+s.rc+(s.pin?' · <span style="color:var(--yellowdark)">TÀI TRỢ</span>':'')+' · <a href="'+s.gm+'" target="_blank" rel="noopener">Maps ↗</a></div>'+
+      dishes.map(function(x){return '<div class="dish"><div><div class="nm">'+hi(x.d[0],q.trim())+'</div><div class="pr">'+fmt(x.d[1])+' *</div></div><button class="addbtn" data-s="'+si+'" data-d="'+x.di+'">+ Thêm</button></div>';}).join('');
+    frag.appendChild(el); n++;
+  }
+  shopList.replaceChildren(frag);
+  if(!n)shopList.innerHTML='<div class="empty"><span class="big">🦀</span>Không tìm thấy món này...<br>Thử từ khoá khác hoặc đặt "Mua hộ" nha!</div>';
   if(typeof LANG!=='undefined'&&LANG==='en')applyLang();
 }
 renderShops();
+var searchTimer=0;
 document.getElementById('shopSearch').addEventListener('input',e=>{
-  if(!document.getElementById('food').classList.contains('show'))document.querySelector('nav [data-tab="food"]').click();
-  renderShops(e.target.value);
+  clearTimeout(searchTimer);
+  var v=e.target.value;
+  searchTimer=setTimeout(function(){
+    if(!document.getElementById('food').classList.contains('show'))document.querySelector('nav [data-tab="food"]').click();
+    renderShops(v);
+  },220);
 });
 shopList.addEventListener('click',e=>{
   const b=e.target.closest('.addbtn');if(!b)return;
@@ -1970,22 +1976,38 @@ function fallbackCopy(t){
 
 /* ---------- 📍 GPS PIN MAP ---------- */
 const PQ_CENTER=[10.2899,103.9840];
-const PQ_BOX=L.latLngBounds([9.85,103.75],[10.55,104.20]);
+let leafletReady=null;
+function loadLeaflet(){
+  if(window.L) return Promise.resolve();
+  if(leafletReady) return leafletReady;
+  leafletReady=new Promise(function(ok,bad){
+    var css=document.createElement("link");
+    css.rel="stylesheet";
+    css.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+    document.head.appendChild(css);
+    var s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+    s.onload=ok; s.onerror=bad;
+    document.head.appendChild(s);
+  });
+  return leafletReady;
+}
 function openMap(target){
   mapTarget=target;
   document.getElementById('mapModal').classList.add('show');
   const saved=gps[target];
   const c=saved?[saved.lat,saved.lng]:PQ_CENTER;
-  requestAnimationFrame(()=>{
+  loadLeaflet().then(function(){
     if(!pinMap){
-      pinMap=L.map('map',{maxBounds:PQ_BOX,maxBoundsViscosity:0.8,minZoom:11});
+      var box=L.latLngBounds([9.85,103.75],[10.55,104.20]);
+      pinMap=L.map('map',{maxBounds:box,maxBoundsViscosity:0.8,minZoom:11});
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18,updateWhenIdle:true,keepBuffer:1}).addTo(pinMap);
       pinMarker=L.marker(c,{draggable:true}).addTo(pinMap);
     }
     pinMap.invalidateSize();
     pinMap.setView(c,16);
     pinMarker.setLatLng(c);
-  });
+  }).catch(function(){ toast("Không tải được bản đồ. Thử lại."); });
 }
 document.getElementById('foodGps').addEventListener('click',()=>openMap('food'));
 document.getElementById('rideGps').addEventListener('click',()=>openMap('ride'));
@@ -2061,6 +2083,7 @@ function openTrack(i){
     <div class="tstep"><span class="ic2">🛵</span><div><div class="tt">Đang giao — ~${dKm.toFixed(1)}km</div><div class="ts">dự kiến ${etaMin} phút</div></div></div>
     <div class="tstep"><span class="ic2">🎉</span><div><div class="tt">Giao thành công (dự kiến)</div><div class="ts">khoảng ${hhmm(tEta)} · ${o.route.toName}</div></div></div>`;
   setTimeout(()=>{
+    loadLeaflet().then(function(){
     if(!trackMap){
       trackMap=L.map('tmap');
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(trackMap);
@@ -2083,6 +2106,7 @@ function openTrack(i){
       trackAnim=requestAnimationFrame(step);
     };
     if(!matchMedia('(prefers-reduced-motion: reduce)').matches)step();
+    });
   },120);
 }
 document.getElementById('tClose').addEventListener('click',()=>{
@@ -2238,6 +2262,6 @@ function paintSplit(){
 paintSplit();
 
 </script>
-<script src="assets/webgl.js" defer></script>
+<script>addEventListener("load",function(){var n=document.createElement("script");n.src="assets/webgl.js";document.body.appendChild(n);},{once:true});</script>
 </body>
 </html>
