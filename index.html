@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Goship123 — Đặt đồ ăn, Xe ôm, Mua hộ Phú Quốc | Kodeeboyzz</title>
@@ -16,7 +17,7 @@
 <meta name="geo.placename" content="Phú Quốc, Kiên Giang">
 <meta name="geo.position" content="10.2899;103.984">
 <meta name="theme-color" content="#0098EA">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%23E63329%22/><text y=%2272%22 x=%2250%22 text-anchor=%22middle%22 font-size=%2260%22>🛵</text></svg>">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -161,7 +162,7 @@ header .zbtn{
   color:#fff;border-radius:12px;padding:8px 12px;font-size:12px;font-weight:700;
   font-family:'Be Vietnam Pro';text-decoration:none;white-space:nowrap;
 }
-/* 📞 HOTLINE nổi bật */
+/*  HOTLINE nổi bật */
 .hotline{
   position:relative;z-index:3;margin-top:12px;display:flex;align-items:center;gap:10px;
   background:rgba(0,0,0,.22);border:1.5px dashed rgba(255,201,60,.85);border-radius:14px;
@@ -696,6 +697,40 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
 .sea .cap b{display:block;font-family:'Be Vietnam Pro',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.2px}
 .sea .cap span{display:block;margin-top:2px;font-size:11px;opacity:.88;max-width:28ch}
 </style>
+<style>
+#bgfx,.bg3d,.fall,.spark{display:none!important}
+body{background:#E8F2FA;box-shadow:none}
+#map{height:min(62dvh,460px);border-radius:16px;border:1px solid #D5E4F2}
+.svc .ic{font-size:0;width:46px;height:46px;border-radius:14px;background:#E7F4FD;display:grid;place-items:center}
+.svc .ic:before{font-size:13px;font-weight:800;color:#075985;letter-spacing:-.03em}
+.svc[data-tab=food] .ic:before{content:"Ăn"}
+.svc[data-tab=ride] .ic:before{content:"Xe"}
+.svc[data-tab=buy] .ic:before{content:"Hộ"}
+.svc[data-tab=orders] .ic:before{content:"Đơn"}
+.tag{letter-spacing:.04em}
+</style>
+
+<style>
+#bgfx,.bg3d,.fall,.spark,.splitbar{display:none!important}
+body{background:#d7ebf8}
+body:before{
+  content:"";position:fixed;inset:-20% -10% auto;height:70vh;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(60% 40% at 20% 30%, rgba(0,152,234,.35), transparent 70%),
+    radial-gradient(50% 40% at 80% 20%, rgba(125,211,252,.45), transparent 68%),
+    linear-gradient(#8fd4f5,#d7ebf8);
+  transform:perspective(600px) rotateX(58deg);
+  animation:seaDrift 14s ease-in-out infinite alternate;
+}
+@keyframes seaDrift{to{transform:perspective(600px) rotateX(52deg) translate3d(-4%,2%,0)}}
+.botfab{border-radius:14px;width:auto;padding:0 12px;font-size:13px;font-weight:800;background:#071422}
+nav button .i{font-size:0}
+nav button .i:before{font-size:11px;font-weight:800;color:#075985}
+nav button[data-tab=food] .i:before{content:"Ăn"}
+nav button[data-tab=ride] .i:before{content:"Xe"}
+nav button[data-tab=buy] .i:before{content:"Hộ"}
+nav button[data-tab=orders] .i:before{content:"Đơn"}
+</style>
 </head>
 <body>
 <div id="bgfx"><div class="grad"></div><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
@@ -707,13 +742,13 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
       <h1>Goship<span class="num">123</span></h1>
       <div class="tag">SIÊU APP PHÚ QUỐC · ĐỒ ĂN · XE ÔM · MUA HỘ</div>
     </div>
-    <a class="zbtn" id="zaloHead" href="#" target="_blank" rel="noopener">💬 Zalo</a>
-    <button class="zbtn" id="langBtn" type="button">🌐 EN</button>
+    <a class="zbtn" id="zaloHead" href="#" target="_blank" rel="noopener">Zalo</a>
+    <button class="zbtn" id="langBtn" type="button">EN</button>
   </div>
 
-  <!-- 📞 HOTLINE -->
+  <!--  HOTLINE -->
   <a class="hotline" href="tel:0387720750">
-    <span class="ring">📞</span>
+    <span class="ring"></span>
     <div>
       <div class="hl1">HOTLINE / ZALO — 7:00–22:00</div>
       <div class="hl2">038 772 0750</div>
@@ -737,24 +772,24 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
   <canvas id="seaStage"></canvas>
   <div class="cap"><b>Nước lớn, đơn vẫn chạy</b><span>Cá heo nhảy mỗi 8 giây — rồi biển nghỉ. Giá chốt trước khi đặt.</span></div>
 </section>
-<section class="splitbar" id="splitBar"></section>
+
 
 
 <!-- lưới dịch vụ -->
 <div class="svcgrid">
-  <button class="svc on" data-tab="food"><span class="ic">🍜</span><span class="lb">Đồ ăn</span></button>
-  <button class="svc" data-tab="ride"><span class="ic">🛵</span><span class="lb">Gọi xe</span></button>
-  <button class="svc" data-tab="buy"><span class="ic">🛍️</span><span class="lb">Mua hộ</span></button>
-  <button class="svc" data-tab="orders"><span class="ic">📦</span><span class="lb">Đơn hàng</span></button>
+  <button class="svc on" data-tab="food"><span class="ic"></span><span class="lb">Đồ ăn</span></button>
+  <button class="svc" data-tab="ride"><span class="ic"></span><span class="lb">Gọi xe</span></button>
+  <button class="svc" data-tab="buy"><span class="ic"></span><span class="lb">Mua hộ</span></button>
+  <button class="svc" data-tab="orders"><span class="ic"></span><span class="lb">Đơn hàng</span></button>
 </div>
 
 <!-- banner khuyến mãi -->
 <div class="banners">
   <div class="btrack" id="btrack">
-    <div class="bslide b1"><span class="em">🎉</span><div><div class="t1">Freeship đơn đầu tiên!</div><div class="t2">Nhập FREESHIP khi thanh toán — đơn từ 150k</div></div></div>
+    <div class="bslide b1"><span class="em">🎉</span><div><div class="t1">Freeship đơn đầu tiên!</div><div class="t2">Nhập FREESHIP khi thanh toán — đơn từ 150.000đ</div></div></div>
     <div class="bslide b2"><span class="em">🦐</span><div><div class="t1">Hải sản Hàm Ninh tươi rói</div><div class="t2">Ghẹ hấp, gỏi cá trích giao tận nơi 30–45'</div></div></div>
-    <div class="bslide b3"><span class="em">🛵</span><div><div class="t1">Xe ôm giá cố định</div><div class="t2">13k mở cửa + 5.5k/km — không kỳ kèo, không tăng giá</div></div></div>
-    <div class="bslide b4"><span class="em">🚗</span><div><div class="t1">Mới! Ô tô 4-7 chỗ & đưa đón sân bay</div><div class="t2">Giá chốt trước · thuê xe du lịch từ 150k/giờ có tài xế</div></div></div>
+    <div class="bslide b3"><span class="em">🛵</span><div><div class="t1">Xe ôm giá cố định</div><div class="t2">13.000đ mở cửa + 5.500đ/km — không kỳ kèo, không tăng giá</div></div></div>
+    <div class="bslide b4"><span class="em">🚗</span><div><div class="t1">Mới! Ô tô 4-7 chỗ & đưa đón sân bay</div><div class="t2">Giá chốt trước · thuê xe du lịch từ 150.000đ/giờ có tài xế</div></div></div>
     <div class="bslide b5" onclick="location.href='taixe.html'" style="cursor:pointer"><span class="em">🛵</span><div><div class="t1">TUYỂN TÀI XẾ — rảnh là chạy!</div><div class="t2">Freelancer tự do, tiền cuốc rõ từng đơn · Bấm để đăng ký 1 phút →</div></div></div>
   </div>
   <div class="bdots" id="bdots"><span class="on"></span><span></span><span></span><span></span><span></span></div>
@@ -763,7 +798,7 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
 <!-- voucher -->
 <div class="vouchers" id="vouchers">
   <button class="vch" data-v="GIAM5K"><span class="tik">🎟️</span><div><div class="cd">GIAM5K</div><div class="ds">Giảm 5k phí ship mọi đơn</div></div></button>
-  <button class="vch" data-v="FREESHIP"><span class="tik">🚀</span><div><div class="cd">FREESHIP</div><div class="ds">Freeship đơn đồ ăn từ 150k</div></div></button>
+  <button class="vch" data-v="FREESHIP"><span class="tik">🚀</span><div><div class="cd">FREESHIP</div><div class="ds">Freeship đơn đồ ăn từ 150.000đ</div></div></button>
 </div>
 
 <!-- thời tiết -->
@@ -891,14 +926,15 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
     <div class="sec-title"><span class="tridots"><i></i><i></i><i></i></span> Gọi xe — Xe ôm & Ô tô 🛵🚗</div>
     <label>Chọn loại xe</label>
     <div class="vehs" id="vehSel">
-      <button class="veh on" data-veh="bike"><span class="vic">🛵</span><span class="vnm">Xe ôm</span><span class="vpr">13k + 5.5k/km</span></button>
-      <button class="veh" data-veh="car4"><span class="vic">🚗</span><span class="vnm">Ô tô 4 chỗ</span><span class="vpr">35k/2km + 13k/km</span></button>
-      <button class="veh" data-veh="car7"><span class="vic">🚐</span><span class="vnm">Ô tô 7 chỗ</span><span class="vpr">45k/2km + 16k/km</span></button>
+      <button class="veh on" data-veh="bike"><span class="vic">🛵</span><span class="vnm">Xe ôm</span><span class="vpr">13.000đ + 5.500đ/km</span></button>
+      <button class="veh" data-veh="car4"><span class="vic">🚗</span><span class="vnm">Ô tô 4 chỗ</span><span class="vpr">35.000đ/2km + 13.000đ/km</span></button>
+      <button class="veh" data-veh="car7"><span class="vic">🚐</span><span class="vnm">Ô tô 7 chỗ</span><span class="vpr">45.000đ/2km + 16.000đ/km</span></button>
     </div>
     <div class="hint" id="rideHint">Giá cố định theo khu — 13.000đ mở cửa + 5.500đ/km, không kỳ kèo, không tăng giá.</div>
     <label>Điểm đón</label>
     <div class="zones" id="zFrom"></div>
-    <button class="gpsbtn" id="rideGps">📍 Ghim vị trí đón chính xác trên bản đồ</button>
+    <button class="gpsbtn" id="rideGps">Ghim điểm đón</button>
+    <button class="gpsbtn" id="rideDrop">Ghim điểm trả</button>
     <label>Điểm đến</label>
     <div class="zones" id="zTo"></div>
     <div class="fare">
@@ -907,7 +943,7 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
     </div>
     <label>Ghi chú cho tài xế (không bắt buộc)</label>
     <input id="rideNote" placeholder="VD: đứng trước cổng chợ đêm, áo xanh...">
-    <button class="cta" id="bookRide">Đặt xe — gửi shop liền 🚀</button>
+    <button class="cta" id="bookRide">Đặt xe</button>
 
     <!-- 🚗 THUÊ XE DU LỊCH -->
     <div class="rentbox">
@@ -946,7 +982,7 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
     <input id="buyEst" type="number" inputmode="numeric" placeholder="VD: 250000" min="0" step="10000">
     <label>Giao đến</label>
     <input id="buyAddr" placeholder="Địa chỉ nhận hàng">
-    <button class="gpsbtn" id="buyGps">📍 Ghim vị trí giao trên bản đồ</button>
+    <button class="gpsbtn" id="buyGps">Ghim điểm giao trên bản đồ</button>
     <div class="fare" style="margin-top:14px">
       <div class="amt" id="buyFee">15.000 đ</div>
       <div class="note">Phí mua hộ (tự tính theo tiền hàng, chưa gồm ship theo khu)</div>
@@ -984,7 +1020,7 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
     </details>
     <details>
       <summary>Phí dịch vụ tính sao?</summary>
-      Đồ ăn: ship nội khu 15.000đ (voucher GIAM5K / FREESHIP). Xe ôm: 13.000đ mở cửa + 5.500đ/km. Ô tô 4 chỗ: 35.000đ/2km đầu + 13.000đ/km. Ô tô 7 chỗ: 45.000đ/2km đầu + 16.000đ/km (đón/trả sân bay phụ phí 40.000đ). Thuê xe du lịch có tài xế: 4 chỗ từ 150k/giờ — 900k/ngày, 7 chỗ từ 200k/giờ — 1.2tr/ngày, đã gồm xăng. Giá chốt trước khi đặt, không tăng giá, không thu thêm.
+      Đồ ăn: ship nội khu 15.000đ (voucher GIAM5K / FREESHIP). Xe ôm: 13.000đ mở cửa + 5.500đ/km. Ô tô 4 chỗ: 35.000đ/2km đầu + 13.000đ/km. Ô tô 7 chỗ: 45.000đ/2km đầu + 16.000đ/km (đón/trả sân bay phụ phí 40.000đ). Thuê xe du lịch có tài xế: 4 chỗ từ 150.000đ/giờ — 700k/ngày, 7 chỗ từ 200k/giờ — 900k/ngày, đã gồm xăng. Giá chốt trước khi đặt, không tăng giá, không thu thêm.
     </details>
     <details>
       <summary>Có ô tô 4-7 chỗ & đưa đón sân bay không?</summary>
@@ -1045,15 +1081,15 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
         </div>
       </div>
       <div class="rbtns">
-        <a class="r1" href="https://zalo.me/0387720750" target="_blank" rel="noopener">💬 Zalo 038 772 0750</a>
+        <a class="r1" href="https://zalo.me/0387720750" target="_blank" rel="noopener">Zalo 038 772 0750</a>
         <a class="r2" href="https://t.me/Kodeeboyzz" target="_blank" rel="noopener">✈️ Telegram</a>
       </div>
     </div>
   </div>
 
   <footer class="foot">
-    <b>Goship123</b> — Đặt đồ ăn · Xe ôm · Ô tô 4-7 chỗ · Thuê xe du lịch · Mua hộ tại Phú Quốc · <a href="taixe.html" style="opacity:.8">🛵 Dành cho Tài xế</a><br>
-    📞 Hotline/Zalo: <a href="tel:0387720750">038 772 0750</a> · 🤖 <a href="#" id="qrBotOpen">Bot Zalo 24/7 (quét QR)</a> · ✈️ <a href="https://t.me/Kodeeboyzz" target="_blank" rel="noopener">t.me/Kodeeboyzz</a><br>
+    <b>Goship123</b> — Đặt đồ ăn · Xe ôm · Ô tô 4-7 chỗ · Thuê xe du lịch · Mua hộ tại Phú Quốc · <a href="taixe.html" style="opacity:.8">Cổng tài xế</a> · <a href="quanly.html">Sổ điều hành</a><br>
+     Hotline/Zalo: <a href="tel:0387720750">038 772 0750</a> · <a href="#" id="qrBotOpen">Bot Zalo 24/7 (quét QR)</a> · ✈️ <a href="https://t.me/Kodeeboyzz" target="_blank" rel="noopener">t.me/Kodeeboyzz</a><br>
     ⏰ Hoạt động 7:00–22:00 mỗi ngày · 📍 Phú Quốc, Kiên Giang<br>
     📜 <a href="#faqSec">Chính sách hoàn tiền & quy định sử dụng</a> · 🤝 <a href="https://kodeeboyzz.com" target="_blank" rel="noopener">Kodeeboyzz.com</a>
     <div class="cop">© 2026 Goship123 · Một sản phẩm của <b>Kodeeboyzz</b>. Giá món ăn là giá tham khảo, báo giá chính xác khi xác nhận đơn. Rating quán theo Google Maps.</div>
@@ -1066,12 +1102,12 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
   <b id="cartTotal">0đ</b>
 </div>
 
-<button class="botfab" id="botFab" aria-label="Chat với GoBot hỗ trợ">🤖</button>
+<button class="botfab" id="botFab" aria-label="Hỗ trợ">Hỗ trợ</button>
 
-<!-- 🤖 modal QR Bot Zalo -->
+<!-- modal QR Bot Zalo -->
 <div class="modal" id="qrBotModal">
   <div class="sheet" style="text-align:center">
-    <h3>🤖 Bot goship123 trên Zalo</h3>
+    <h3>Bot goship123 trên Zalo</h3>
     <p style="font-size:12.5px;color:var(--mut);margin:6px 0 10px">Mở Zalo → bấm nút quét QR → quét mã dưới đây để chat với bot.<br>Bot trả lời tự động 24/7: bảng giá, đặt đơn, ô tô — sân bay, thuê xe...</p>
     <img src="bot-qr.png" alt="QR Bot Zalo Goship123" style="width:min(78vw,300px);border-radius:16px;border:1.5px solid var(--line)">
     <button class="cta" id="qrBotClose" style="margin-top:14px">← Đóng</button>
@@ -1095,7 +1131,7 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
       <input id="foodName" placeholder="VD: Anh Tú — 09xxxxxxxx">
       <label>Giao đến</label>
       <input id="foodAddr" placeholder="Địa chỉ nhận đồ ăn">
-      <button class="gpsbtn" id="foodGps">📍 Ghim vị trí giao trên bản đồ</button>
+      <button class="gpsbtn" id="foodGps">Ghim điểm giao trên bản đồ</button>
       <button class="cta" id="toDeposit">Tiếp tục → Ứng tiền cọc</button>
     </div>
 
@@ -1167,7 +1203,7 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
     <div class="tsteps" id="tSteps"></div>
     <div class="tnote">ℹ️ Tuyến đường & thời gian là <b>dự kiến</b> theo khoảng cách GPS. Vị trí shipper trực tiếp: gọi hoặc nhắn Zalo bên dưới, shipper chia sẻ vị trí ngay.</div>
     <div class="rbtns" style="margin-top:10px">
-      <a class="r1" href="tel:0387720750">📞 Gọi 038 772 0750</a>
+      <a class="r1" href="tel:0387720750"> Gọi 038 772 0750</a>
       <a class="r2" href="https://t.me/Kodeeboyzz" target="_blank" rel="noopener">✈️ Telegram Kodeeboyzz</a>
     </div>
     <button class="cta dark" id="tClose" style="margin-top:10px">← Đóng</button>
@@ -1194,10 +1230,10 @@ html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
 </div>
 
 <nav>
-  <button class="on" data-tab="food"><span class="i">🍜</span>Đồ ăn</button>
-  <button data-tab="ride"><span class="i">🛵</span>Gọi xe</button>
-  <button data-tab="buy"><span class="i">🛍️</span>Mua hộ</button>
-  <button data-tab="orders"><span class="i">📦</span>Đơn</button>
+  <button class="on" data-tab="food"><span class="i"></span>Đồ ăn</button>
+  <button data-tab="ride"><span class="i"></span>Gọi xe</button>
+  <button data-tab="buy"><span class="i"></span>Mua hộ</button>
+  <button data-tab="orders"><span class="i"></span>Đơn</button>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -1219,7 +1255,7 @@ const CONFIG = {
   TG_CHAT_ID   : "",
   GA_ID        : "",   /* 📊 Google Analytics: tạo tại analytics.google.com, điền mã G-XXXXXXX để đếm khách truy cập */
   DRIVER_CUT   : 0.85, /* 💰 Tỉ lệ TÀI XẾ nhận trên phí ship/cuốc (0.85 = 85%). Phần còn lại là của mày — chỉ hiện trong Telegram của mày, không hiện với khách */
-  /* 🤖 Bot Zalo (Deno Deploy): mọi đơn & tin nhắn GoBot sẽ bắn thẳng về Zalo của mày qua bot */
+  /* Bot Zalo (Deno Deploy): mọi đơn & tin nhắn GoBot sẽ bắn thẳng về Zalo của mày qua bot */
   ZALO_WORKER_URL : "https://funny-bobcat-4885.vaultadidas-collab.deno.net",
 };
 /* ═══════════════════════════════════════ */
@@ -1251,14 +1287,14 @@ const DICT={
 "🏝️ Thuê xe du lịch trọn gói (có tài xế)":"🏝️ Private car rental (with driver)","Loại xe":"Vehicle","Gói thuê":"Package","1 giờ":"1 hour","Nửa ngày (4h)":"Half day (4h)","Nguyên ngày":"Full day",
 "Đặt thuê xe — gửi shop liền 🚀":"Book rental — sent to shop instantly 🚀","Ngày & giờ đón + điểm đón":"Pickup date, time & location","Sân bay ✈️":"Airport ✈️",
 "Freeship đơn đầu tiên!":"Free shipping on your 1st order!",
-"Nhập FREESHIP khi thanh toán — đơn từ 150k":"Apply FREESHIP at checkout — orders 150k+",
+"Nhập FREESHIP khi thanh toán — đơn từ 150.000đ":"Apply FREESHIP at checkout — orders 150k+",
 "Hải sản Hàm Ninh tươi rói":"Fresh Ham Ninh seafood",
 "Ghẹ hấp, gỏi cá trích giao tận nơi 30–45'":"Steamed crab & herring salad in 30–45'",
 "Xe ôm giá cố định":"Fixed-price bike rides",
-"13k mở cửa + 5.5k/km — không kỳ kèo, không tăng giá":"13k base + 5.5k/km — no haggling, no surge",
-"Mới! Ô tô 4-7 chỗ & đưa đón sân bay":"New! 4 & 7-seat cars + airport transfer","TUYỂN TÀI XẾ — rảnh là chạy!":"DRIVERS WANTED — drive when free!","Freelancer tự do, tiền cuốc rõ từng đơn · Bấm để đăng ký 1 phút →":"Freelance & flexible, clear pay per trip · Tap to sign up in 1 min →","Giá chốt trước · thuê xe du lịch từ 150k/giờ có tài xế":"Fixed price · private car w/ driver from 150k/hr",
+"13.000đ mở cửa + 5.500đ/km — không kỳ kèo, không tăng giá":"13,000 base + 5,500/km — no haggling, no surge",
+"Mới! Ô tô 4-7 chỗ & đưa đón sân bay":"New! 4 & 7-seat cars + airport transfer","TUYỂN TÀI XẾ — rảnh là chạy!":"DRIVERS WANTED — drive when free!","Freelancer tự do, tiền cuốc rõ từng đơn · Bấm để đăng ký 1 phút →":"Freelance & flexible, clear pay per trip · Tap to sign up in 1 min →","Giá chốt trước · thuê xe du lịch từ 150.000đ/giờ có tài xế":"Fixed price · private car w/ driver from 150k/hr",
 "Giảm 5k phí ship mọi đơn":"5k off shipping, any order",
-"Freeship đơn đồ ăn từ 150k":"Free ship, food orders 150k+",
+"Freeship đơn đồ ăn từ 150.000đ":"Free ship, food orders 150k+",
 "Hôm nay":"Today","Ngày mai":"Tomorrow","Ngày kia":"Day after",
 "🗺️ Bản đồ đảo — bấm khu để đặt xe":"🗺️ Island map — tap a zone to book a ride",
 "Khu đang phục vụ":"Service zones","Trung tâm Dương Đông":"Duong Dong center",
@@ -1270,14 +1306,14 @@ const DICT={
 "Điểm đón":"Pickup","Điểm đến":"Drop-off",
 "Ghi chú cho tài xế (không bắt buộc)":"Note for driver (optional)",
 "Chọn điểm đón và điểm đến để xem giá":"Pick pickup & drop-off to see the fare",
-"Đặt xe — gửi shop liền 🚀":"Book ride — sent to shop instantly 🚀",
+"Đặt xe":"Book ride — sent to shop instantly 🚀",
 "Cần mua gì?":"What should we buy?","Mua ở đâu? (nếu biết)":"Where to buy? (if known)",
 "Tiền hàng dự kiến (đ)":"Estimated goods cost (đ)","Giao đến":"Deliver to",
 "Phí mua hộ (tự tính theo tiền hàng, chưa gồm ship theo khu)":"Service fee (auto by goods value, shipping excluded)",
 "Ứng tiền & gửi đơn 💬":"Prepay & send order 💬",
 "Tên + SĐT của bạn":"Your name + phone",
-"📍 Ghim vị trí đón chính xác trên bản đồ":"📍 Pin exact pickup on the map",
-"📍 Ghim vị trí giao trên bản đồ":"📍 Pin delivery spot on the map",
+"Ghim điểm đón trên bản đồ":"📍 Pin exact pickup on the map",
+"Ghim điểm giao trên bản đồ":"📍 Pin delivery spot on the map",
 "📍 Đã ghim vị trí ✅ (bấm để sửa)":"📍 Location pinned ✅ (tap to edit)",
 "Tiếp tục → Ứng tiền cọc":"Continue → Pay deposit",
 "✅ Đã chuyển — Gửi đơn qua Zalo":"✅ Paid — Send order via Zalo",
@@ -1286,7 +1322,7 @@ const DICT={
 "Đặt đồ ăn 🍜":"Food order 🍜","Ứng tiền mua hộ 🛍️":"Buy4me prepay 🛍️","Ghim vị trí 📍":"Pin location 📍",
 "Kéo ghim tới đúng chỗ của bạn, hoặc bấm nút định vị.":"Drag the pin to your spot, or use GPS.",
 "🛰️ Định vị GPS của tôi":"🛰️ Use my GPS","Xác nhận vị trí này ✅":"Confirm this spot ✅",
-"📞 Gọi hotline":"📞 Call hotline","💬 Hỏi vị trí shipper":"💬 Ask shipper location",
+" Gọi hotline":" Call hotline","💬 Hỏi vị trí shipper":"💬 Ask shipper location",
 "🗺️ Xem hành trình giao trên bản đồ":"🗺️ View delivery journey on map",
 "Tạm tính":"Subtotal","Ship nội khu":"Local shipping","Tổng":"Total",
 "* Giá món là giá tham khảo — shop báo giá chính xác khi xác nhận đơn":"* Prices are reference — exact quote on order confirmation",
@@ -1320,7 +1356,7 @@ function applyLang(){
   });
   for(const id in PH){const e=document.getElementById(id);if(e)e.placeholder=en?PH[id][1]:PH[id][0];}
   for(const id in RICH){const e=document.getElementById(id);if(e)e.innerHTML=en?RICH[id][1]:RICH[id][0];}
-  const lb=document.getElementById('langBtn');if(lb)lb.textContent=en?"🌐 VI":"🌐 EN";
+  const lb=document.getElementById('langBtn');if(lb)lb.textContent=en?"🌐 VI":"EN";
 }
 document.getElementById('langBtn').addEventListener('click',()=>{
   LANG=LANG==='vi'?'en':'vi';applyLang();
@@ -1557,8 +1593,8 @@ const VEHICLES={
 };
 /* 🏝️ THUÊ XE DU LỊCH (giá trọn gói có tài xế + xăng) — cut tài xế 80% */
 const RENTALS={
- car4:{h1:150000,h4:550000,day:900000},
- car7:{h1:200000,h4:750000,day:1200000}
+ car4:{h1:150000,h4:520000,day:700000},
+ car7:{h1:200000,h4:680000,day:900000}
 };
 const RENT_LBL={h1:"1 giờ",h4:"nửa ngày (4h)",day:"nguyên ngày"};
 const fmt=n=>Math.round(n).toLocaleString('vi-VN')+"đ";
@@ -1615,7 +1651,7 @@ CATS.forEach(c=>{
 
 /* ---------- FOOD LIST + SEARCH (quán pin:true tự lên top + badge 📌) ---------- */
 const shopList=document.getElementById('shopList');
-const hi=(txt,q)=>q?txt.replace(new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi"),"<mark>$1</mark>"):txt;
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&","<":"<",">":">",'"':"""}[c]));} const hi=(txt,q)=>{const safe=esc(txt);if(!q)return safe;return safe.replace(new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi"),"<mark>$1</mark>");}
 function renderShops(q=""){
   const ql=q.trim().toLowerCase();
   shopList.innerHTML="";
@@ -1692,7 +1728,7 @@ function qrUrl(amount,memo){
   /* QR ZaloPay tĩnh — khách tự nhập số tiền + ghi MÃ ĐƠN vào lời nhắn */
   return CONFIG.PAY_QR;
 }
-function gmaps(p){return p?`https://maps.google.com/?q=${p.lat.toFixed(6)},${p.lng.toFixed(6)}`:null;}
+function gmaps(p){if(!p||!Number.isFinite(+p.lat)||!Number.isFinite(+p.lng))return null;const lat=+p.lat,lng=+p.lng;if(lat<9.8||lat>10.6||lng<103.7||lng>104.3)return null;return 'https://maps.google.com/?q='+lat.toFixed(6)+','+lng.toFixed(6);}
 
 /* ---------- FOOD CHECKOUT ---------- */
 document.getElementById('toDeposit').addEventListener('click',()=>{
@@ -1717,11 +1753,11 @@ document.getElementById('toDeposit').addEventListener('click',()=>{
 document.getElementById('backBtn').addEventListener('click',()=>setStep(1));
 document.getElementById('paidBtn').addEventListener('click',()=>{
   const o=pendingFood;if(!o)return;
-  const msg=`🍜 ĐƠN ĐỒ ĂN ${o.code} (Goship123)
+  const msg=`🍜 ĐƠN ĐỒ ĂN ${esc(o.code)} (Goship123)
 Khách: ${o.name}
 ${o.items.map(i=>`• ${i.qty}x ${i.name} — ${i.shop}`).join("\n")}
 Ship: ${fmt(o.ship)}${o.voucher?` (voucher ${o.voucher})`:""}
-Tổng (tham khảo): ${fmt(o.total)} | Đã cọc: ${fmt(o.dep)} (CK: ${o.code})
+Tổng (tham khảo): ${fmt(o.total)} | Đã cọc: ${fmt(o.dep)} (CK: ${esc(o.code)})
 📍 Giao: ${o.addr}${o.gps?`\n🗺️ GPS: ${gmaps(o.gps)}`:""}`;
   notify(msg+ownerLine(o.ship),{code:o.code,type:"🍜 Đồ ăn",fare:o.ship,cut:CONFIG.DRIVER_CUT,detail:o.items.map(i=>i.qty+"x "+i.name+" ("+i.shop+")").join(", ")+" → GIAO: "+o.addr});
   sendZalo(msg);
@@ -1750,25 +1786,55 @@ function chipRow(el,onPick){
 chipRow(document.getElementById('zFrom'),z=>{zFrom=z;calcFare();});
 chipRow(document.getElementById('zTo'),z=>{zTo=z;calcFare();});
 function km(a,b){return (KM[a]&&KM[a][b])??(KM[b]&&KM[b][a])??10;}
-let curVeh="bike";
-const isAirport=()=>zFrom==="Sân bay ✈️"||zTo==="Sân bay ✈️";
-function rideFare(){
-  const v=VEHICLES[curVeh], d=km(zFrom,zTo);
-  let f=v.base+Math.max(0,d-v.freeKm)*v.perKm;
-  if(isAirport())f+=v.airport;
-  return {d,f,v};
+let curVeh="bike", roadDist=null, fareToken=0;
+const roadCache={};
+const isAirport=z=>typeof z==="string"&&z.startsWith("Sân bay");
+function rideFare(d){
+  const v=VEHICLES[curVeh];
+  const dist=d!=null?d:(roadDist!=null?roadDist:km(zFrom,zTo));
+  const legs=Math.max(0,dist-v.freeKm);
+  let f=v.base+legs*v.perKm;
+  const air=(isAirport(zFrom)||isAirport(zTo))?v.airport:0;
+  f+=air;
+  return {d:dist,f,v,air,legs};
 }
-function calcFare(){
+async function roadKm(a,b){
+  const key=a+"|"+b;
+  if(roadCache[key]) return roadCache[key];
+  const A=ZONE_XY[a], B=ZONE_XY[b];
+  if(!A||!B) return {km:km(a,b), src:"bảng khu"};
+  const url=`https://router.project-osrm.org/route/v1/driving/${A[1]},${A[0]};${B[1]},${B[0]}?overview=false`;
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),7000);
+  try{
+    const r=await fetch(url,{signal:ctrl.signal});
+    const j=await r.json();
+    const meters=j.routes&&j.routes[0]&&j.routes[0].distance;
+    if(!meters) throw new Error("no route");
+    const out={km:Math.round(meters/100)/10, src:"đường bộ"};
+    roadCache[key]=out;
+    return out;
+  }catch(e){
+    return {km:km(a,b), src:"bảng khu"};
+  }finally{ clearTimeout(timer); }
+}
+async function calcFare(){
   if(!zFrom||!zTo)return;
-  const {d,f,v}=rideFare();
+  const token=++fareToken;
+  roadDist=null;
+  document.getElementById('fareNote').textContent="Đang đo khoảng cách đường bộ…";
+  const road=await roadKm(zFrom,zTo);
+  if(token!==fareToken)return;
+  roadDist=road.km;
+  const {d,f,v,air}=rideFare(road.km);
   document.getElementById('fareAmt').textContent=fmt(f);
-  document.getElementById('fareNote').textContent=`${v.ic} ${v.name} · ${zFrom} → ${zTo} · ~${d}km · giá chốt trước${isAirport()?" · gồm phụ phí sân bay":""}`;
+  document.getElementById('fareNote').textContent=`${v.name} · ${zFrom} → ${zTo} · ${d} km ${road.src} · ${fmt(v.base)} mở cửa${v.freeKm?` gồm ${v.freeKm} km`:''} + ${fmt(v.perKm)}/km`+(air?` + phụ phí sân bay ${fmt(air)}`:'');
 }
 /* chọn loại xe */
 const VEH_HINT={
- bike:"Giá cố định theo khu — 13.000đ mở cửa + 5.500đ/km, không kỳ kèo, không tăng giá.",
- car4:"Ô tô 4 chỗ máy lạnh — 35.000đ/2km đầu + 13.000đ/km. Đưa đón sân bay, đi chơi, về khuya mưa gió khỏi lo.",
- car7:"Ô tô 7 chỗ rộng rãi — 45.000đ/2km đầu + 16.000đ/km. Hợp nhóm bạn, gia đình, nhiều hành lý."
+ bike:"Nội đảo 13.000đ mở cửa + 5.500đ/km. Sân bay thêm 10.000đ. Giá chốt trước.",
+ car4:"35.000đ cho 2 km đầu, sau đó 13.000đ/km. Sân bay thêm 40.000đ, một lần.",
+ car7:"45.000đ cho 2 km đầu, sau đó 16.000đ/km. Sân bay thêm 40.000đ, một lần."
 };
 document.querySelectorAll('#vehSel .veh').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('#vehSel .veh').forEach(x=>x.classList.remove('on'));
@@ -1782,7 +1848,7 @@ document.getElementById('bookRide').addEventListener('click',()=>{
   const note=document.getElementById('rideNote').value.trim();
   const code=genCode();
   const msg=`${v.ic} ĐẶT XE — ${v.name.toUpperCase()} ${code} (Goship123)
-Đón: ${zFrom}${gps.ride?`\n🗺️ GPS đón: ${gmaps(gps.ride)}`:""}
+Đón: ${zFrom}${gps.ride?`\nĐón Maps: ${gmaps(gps.ride)}`:""}${gps.rideDrop?`\nTrả Maps: ${gmaps(gps.rideDrop)}`:""}
 Đến: ${zTo}
 Giá: ${fmt(f)} (trả tài xế)${isAirport()?"\n✈️ Đã gồm phụ phí sân bay":""}${note?`\nGhi chú: ${note}`:""}`;
   notify(msg+ownerLine(f,v.cut),{code:code,type:v.ic+" "+v.name,fare:f,cut:v.cut,detail:"Đón: "+zFrom+" → Đến: "+zTo+(note?" · "+note:"")});
@@ -1853,10 +1919,10 @@ document.getElementById('bCloseBtn').addEventListener('click',()=>document.getEl
 document.getElementById('buyModal').addEventListener('click',e=>{if(e.target.id==='buyModal')e.target.classList.remove('show');});
 document.getElementById('bPaidBtn').addEventListener('click',()=>{
   const o=pendingBuy;if(!o)return;
-  const msg=`🛍️ ĐƠN MUA HỘ ${o.code} (Goship123)
+  const msg=`🛍️ ĐƠN MUA HỘ ${esc(o.code)} (Goship123)
 Mua: ${o.items}${o.where?`\nTại: ${o.where}`:""}
 Tiền hàng dự kiến: ${fmt(o.est)} | Phí: ${fmt(o.fee)}
-Đã ứng: ${fmt(o.dep)} (CK: ${o.code}) — thừa hoàn thiếu bù
+Đã ứng: ${fmt(o.dep)} (CK: ${esc(o.code)}) — thừa hoàn thiếu bù
 📍 Giao: ${o.addr}${o.gps?`\n🗺️ GPS: ${gmaps(o.gps)}`:""}`;
   notify(msg+ownerLine(o.fee),{code:o.code,type:"🛍️ Mua hộ",fare:o.fee,cut:CONFIG.DRIVER_CUT,detail:o.items+(o.where?" @ "+o.where:"")+" → GIAO: "+o.addr});
   sendZalo(msg);
@@ -1875,7 +1941,7 @@ function ownerLine(fee,cut){
   return `\n────────────\n💰 (Kín — chỉ mày thấy) Phần của mày: ${fmt(me)} · Trả tài xế: ${fmt(drv)}`;
 }
 function notify(msg,meta){
-  /* 🤖 bắn đơn về Zalo chủ shop + lưu vào hệ TÀI XẾ (meta = mã/giá/cut) */
+  /* bắn đơn về Zalo chủ shop + lưu vào hệ TÀI XẾ (meta = mã/giá/cut) */
   if(CONFIG.ZALO_WORKER_URL){
     fetch(CONFIG.ZALO_WORKER_URL+"/order",{
       method:"POST",headers:{"Content-Type":"application/json"},
@@ -1904,23 +1970,26 @@ function fallbackCopy(t){
 
 /* ---------- 📍 GPS PIN MAP ---------- */
 const PQ_CENTER=[10.2899,103.9840];
+const PQ_BOX=L.latLngBounds([9.85,103.75],[10.55,104.20]);
 function openMap(target){
   mapTarget=target;
   document.getElementById('mapModal').classList.add('show');
-  setTimeout(()=>{
+  const saved=gps[target];
+  const c=saved?[saved.lat,saved.lng]:PQ_CENTER;
+  requestAnimationFrame(()=>{
     if(!pinMap){
-      pinMap=L.map('map').setView(gps[target]?[gps[target].lat,gps[target].lng]:PQ_CENTER,13);
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(pinMap);
-      pinMarker=L.marker(pinMap.getCenter(),{draggable:true}).addTo(pinMap);
-    }else{
-      pinMap.invalidateSize();
-      const c=gps[target]?[gps[target].lat,gps[target].lng]:PQ_CENTER;
-      pinMap.setView(c,14);pinMarker.setLatLng(c);
+      pinMap=L.map('map',{maxBounds:PQ_BOX,maxBoundsViscosity:0.8,minZoom:11});
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18,updateWhenIdle:true,keepBuffer:1}).addTo(pinMap);
+      pinMarker=L.marker(c,{draggable:true}).addTo(pinMap);
     }
-  },100);
+    pinMap.invalidateSize();
+    pinMap.setView(c,16);
+    pinMarker.setLatLng(c);
+  });
 }
 document.getElementById('foodGps').addEventListener('click',()=>openMap('food'));
 document.getElementById('rideGps').addEventListener('click',()=>openMap('ride'));
+document.getElementById('rideDrop').addEventListener('click',()=>openMap('rideDrop'));
 document.getElementById('buyGps').addEventListener('click',()=>openMap('buy'));
 document.getElementById('locateBtn').addEventListener('click',()=>{
   if(!navigator.geolocation)return toast("Máy này không hỗ trợ GPS 😢");
@@ -1933,11 +2002,11 @@ document.getElementById('locateBtn').addEventListener('click',()=>{
 });
 document.getElementById('mapOk').addEventListener('click',()=>{
   const p=pinMarker.getLatLng();
-  gps[mapTarget]={lat:p.lat,lng:p.lng};
+  gps[mapTarget]={lat:+p.lat.toFixed(6),lng:+p.lng.toFixed(6)};
   document.getElementById('mapModal').classList.remove('show');
-  const btn=document.getElementById(mapTarget+"Gps");
-  btn.classList.add('ok');btn.textContent="📍 Đã ghim vị trí ✅ (bấm để sửa)";
-  toast("Đã lưu vị trí — sẽ gửi kèm link Google Maps 🗺️");
+  const btn=document.getElementById(mapTarget==="rideDrop"?"rideDrop":mapTarget+"Gps");
+  if(btn){btn.classList.add('ok');btn.textContent="Đã ghim "+p.lat.toFixed(5)+", "+p.lng.toFixed(5);}
+  toast("Đã lưu. Tài xế mở được trên Google Maps.");
 });
 document.getElementById('mapModal').addEventListener('click',e=>{if(e.target.id==='mapModal')e.target.classList.remove('show');});
 
@@ -1955,8 +2024,8 @@ function addOrder(type,code,desc,amount,dep,status,route){
 function renderOrders(){
   const el=document.getElementById('orderList');
   if(!orders.length){el.innerHTML='<div class="empty"><span class="big">🐚</span>Chưa có đơn nào.<br>Đặt món đầu tiên đi nè!</div>';return;}
-  el.innerHTML=orders.map((o,i)=>`<div class="order"><span class="code">${o.code}</span> · ${o.type} · ${o.time}<br>${o.desc}<br>
-    <span class="st">● ${o.status}</span> — <b>${fmt(o.amount)}</b>${o.dep?` · <span class="dep">Đã ứng ${fmt(o.dep)}</span>`:""}<br>
+  el.innerHTML=orders.map((o,i)=>`<div class="order"><span class="code">${esc(o.code)}</span> · ${esc(o.type)} · ${o.time}<br>${esc(o.desc)}<br>
+    <span class="st">● ${esc(o.status)}</span> — <b>${fmt(o.amount)}</b>${o.dep?` · <span class="dep">Đã ứng ${fmt(o.dep)}</span>`:""}<br>
     <button class="trackbtn" data-t="${i}">🗺️ Xem hành trình giao trên bản đồ</button>
     ${o.rated?`<div style="margin-top:8px;font-weight:800;color:#E8A300">Bạn đã chấm ${"★".repeat(o.rated)}${"☆".repeat(5-o.rated)} — cảm ơn bạn!</div>`
     :`<div style="margin-top:8px"><div style="font-size:12px;opacity:.75;margin-bottom:4px">Đơn xong rồi? Chấm sao cho tài xế:</div><div class="rstars" data-o="${i}" style="display:flex;gap:6px">${[1,2,3,4,5].map(s=>`<button data-s="${s}" style="font-size:24px;line-height:1;background:none;border:0;color:#E8A300;padding:2px">☆</button>`).join("")}</div></div>`}</div>`).join('');
@@ -1979,7 +2048,7 @@ document.getElementById('orderList').addEventListener('click',async e=>{
 });
 function openTrack(i){
   const o=orders[i];if(!o||!o.route)return;
-  document.getElementById('tTitle').textContent=`Hành trình đơn ${o.code} 🗺️`;
+  document.getElementById('tTitle').textContent=`Hành trình đơn ${esc(o.code)} 🗺️`;
   document.getElementById('trackModal').classList.add('show');
   const dKm=Math.max(1,havKm(o.route.from,o.route.to));
   const etaMin=Math.round(dKm/25*60)+10; /* 25km/h + 10' chuẩn bị */
@@ -1987,7 +2056,7 @@ function openTrack(i){
   const tEta=new Date(o.at+etaMin*60000);
   const hhmm=d=>d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
   document.getElementById('tSteps').innerHTML=`
-    <div class="tstep done"><span class="ic2">✓</span><div><div class="tt">Đã nhận đơn ${o.code}</div><div class="ts">${hhmm(t0)} · ${o.type}</div></div></div>
+    <div class="tstep done"><span class="ic2">✓</span><div><div class="tt">Đã nhận đơn ${esc(o.code)}</div><div class="ts">${hhmm(t0)} · ${esc(o.type)}</div></div></div>
     <div class="tstep now"><span class="ic2">🧑‍🍳</span><div><div class="tt">${o.type.includes("Xe ôm")?"Tài xế đang đến điểm đón":"Đang chuẩn bị / lấy hàng"}</div><div class="ts">${o.route.fromName}</div></div></div>
     <div class="tstep"><span class="ic2">🛵</span><div><div class="tt">Đang giao — ~${dKm.toFixed(1)}km</div><div class="ts">dự kiến ${etaMin} phút</div></div></div>
     <div class="tstep"><span class="ic2">🎉</span><div><div class="tt">Giao thành công (dự kiến)</div><div class="ts">khoảng ${hhmm(tEta)} · ${o.route.toName}</div></div></div>`;
@@ -2024,7 +2093,7 @@ document.getElementById('trackModal').addEventListener('click',e=>{
   if(e.target.id==='trackModal'){e.target.classList.remove('show');if(trackAnim)cancelAnimationFrame(trackAnim);}
 });
 
-/* ---------- 🤖 GOBOT ---------- */
+/* ---------- GOBOT ---------- */
 const chatlog=document.getElementById('chatlog');
 const quickies=document.getElementById('quickies');
 
@@ -2043,17 +2112,17 @@ const DEFAULT_QUICKIES=[
   ["🍜 Đặt đồ ăn",()=>{botMsg("Ok nè! Mình chuyển bạn qua menu 70+ quán uy tín (rating Google thật). Chọn món bỏ giỏ rồi bấm thanh giỏ hàng để đặt nha 🧺");setTimeout(()=>goTab('food'),900);}],
   ["🛵 Gọi xe",()=>{botMsg("Chở liền! Xe ôm hoặc ô tô 4-7 chỗ đều có — chọn loại xe + khu đón + khu đến là ra giá cố định, khỏi kỳ kèo 🛵🚗");setTimeout(()=>goTab('ride'),900);}],
   ["🛍️ Mua hộ",()=>{botMsg("Cần mua gì cứ ghi ra, shop đi mua tận nơi. Bạn ứng tiền hàng trước có mã đơn đối chiếu, thừa hoàn thiếu bù nha 🧾");setTimeout(()=>goTab('buy'),900);}],
-  ["🚗 Ô tô & sân bay",()=>{botMsg("Goship123 có ô tô máy lạnh nè 🚗\n• 4 chỗ: 35k/2km đầu + 13k/km\n• 7 chỗ: 45k/2km đầu + 16k/km\n• Đưa đón sân bay: +40k phụ phí, giá CHỐT TRƯỚC\n🏝️ Thuê xe du lịch có tài xế + xăng: 4 chỗ từ 150k/giờ — 900k/ngày, 7 chỗ từ 200k/giờ — 1.2tr/ngày\nQua tab Gọi xe chọn loại xe là ra giá liền!");setTimeout(()=>goTab('ride'),1200);}],
-  ["💰 Phí ship bao nhiêu?",()=>{botMsg("Bảng phí Goship123:\n• Đồ ăn: ship nội khu 15.000đ (có voucher GIAM5K & FREESHIP)\n• Xe ôm: 13.000đ mở cửa + 5.500đ/km\n• Ô tô 4 chỗ: 35k/2km đầu + 13k/km · 7 chỗ: 45k/2km đầu + 16k/km\n• Thuê xe du lịch có tài xế từ 150k/giờ\n• Mua hộ: phí từ 15.000đ theo giá trị hàng\nGiá cố định, không thu thêm 👌");}],
+  ["🚗 Ô tô & sân bay",()=>{botMsg("Goship123 có ô tô máy lạnh nè 🚗\n• 4 chỗ: 35.000đ/2km đầu + 13.000đ/km\n• 7 chỗ: 45.000đ/2km đầu + 16.000đ/km\n• Đưa đón sân bay: +40.000đ phụ phí ô tô, giá CHỐT TRƯỚC\n🏝️ Thuê xe du lịch có tài xế + xăng: 4 chỗ từ 150.000đ/giờ — 700k/ngày, 7 chỗ từ 200k/giờ — 900k/ngày\nQua tab Gọi xe chọn loại xe là ra giá liền!");setTimeout(()=>goTab('ride'),1200);}],
+  ["💰 Phí ship bao nhiêu?",()=>{botMsg("Bảng phí Goship123:\n• Đồ ăn: ship nội khu 15.000đ (có voucher GIAM5K & FREESHIP)\n• Xe ôm: 13.000đ mở cửa + 5.500đ/km\n• Ô tô 4 chỗ: 35.000đ/2km đầu + 13.000đ/km · 7 chỗ: 45.000đ/2km đầu + 16.000đ/km\n• Thuê xe du lịch có tài xế từ 150.000đ/giờ\n• Mua hộ: phí từ 15.000đ theo giá trị hàng\nGiá cố định, không thu thêm 👌");}],
   ["🔒 Cọc là sao? An toàn không?",()=>{botMsg("Cọc để 2 bên đều yên tâm, chống boom đơn á:\n• Đồ ăn: cọc 30% (tối thiểu 20k), còn lại COD\n• Mua hộ: ứng tiền hàng + phí, có hoá đơn chụp gửi\n• Chuyển khoản QR có MÃ ĐƠN đối chiếu, người nhận HUYNH HO ANH VUONG (ZaloPay)\n• Hoàn 100% nếu shop huỷ hoặc không mua được 💯");}],
-  ["📞 Gặp người thật",()=>{botMsg("Gọi hotline/Zalo 038 772 0750 (7:00–22:00) 📞 Ngoài giờ nhắn Bot Zalo Kodeeboyzz trực 24/7 — kéo xuống cuối trang bấm \"Bot Zalo\" quét QR, hoặc Telegram t.me/Kodeeboyzz 🤖");}],
+  [" Gặp người thật",()=>{botMsg("Gọi hotline/Zalo 038 772 0750 (7:00–22:00)  Ngoài giờ nhắn Bot Zalo Kodeeboyzz trực 24/7 — kéo xuống cuối trang bấm \"Bot Zalo\" quét QR, hoặc Telegram t.me/Kodeeboyzz 🤖");}],
 ];
 function botIntent(t){
   t=t.toLowerCase();
   if(/(đối tác|doi tac|hợp tác|hop tac|ghim|quảng cáo|quang cao|đăng ký quán|dang ky quan|tài xế|tai xe)/.test(t))return()=>botMsg("Goship123 đang tuyển đối tác nè 💼\n• Quán & tài xế lên app MIỄN PHÍ\n• Gói GHIM TUẦN 99k: ghim đầu danh sách + badge nổi bật\n• Gói GHIM THÁNG 299k: ghim top + lên banner + GoBot gợi ý quán bạn\n🛵 Muốn chạy TÀI XẾ: mở trang taixe.html (link ở cuối trang \"Dành cho Tài xế\") — đăng ký 1 phút, admin duyệt trong ngày!\nQuán muốn hợp tác: Telegram t.me/Kodeeboyzz hoặc Bot Zalo Kodeeboyzz nha!");
-  if(/(hotline|số điện thoại|so dien thoai|sdt|gọi|goi cho)/.test(t))return()=>botMsg("📞 Hotline/Zalo Goship123: 038 772 0750 (7:00–22:00) — bấm nút GỌI NGAY trên đầu trang! Ngoài giờ: Bot Zalo Kodeeboyzz trực 24/7 (quét QR cuối trang) hoặc Telegram t.me/Kodeeboyzz");
+  if(/(hotline|số điện thoại|so dien thoai|sdt|gọi|goi cho)/.test(t))return()=>botMsg(" Hotline/Zalo Goship123: 038 772 0750 (7:00–22:00) — bấm nút GỌI NGAY trên đầu trang! Ngoài giờ: Bot Zalo Kodeeboyzz trực 24/7 (quét QR cuối trang) hoặc Telegram t.me/Kodeeboyzz");
   if(/(hành trình|hanh trinh|theo dõi|theo doi|đơn của tôi|don cua toi|shipper ở đâu|shipper o dau|tracking)/.test(t))return()=>botMsg("Vào mục Đơn hàng 📦 → bấm 'Xem hành trình giao trên bản đồ' là thấy tuyến đường + thời gian dự kiến trên bản đồ GPS. Muốn biết vị trí shipper chính xác từng phút thì gọi 038 772 0750 hoặc nhắn Bot Zalo Kodeeboyzz (QR cuối trang), shipper chia sẻ vị trí trực tiếp liền!");
-  if(/(voucher|mã giảm|ma giam|khuyến mãi|khuyen mai|freeship)/.test(t))return()=>botMsg("Đang có 2 voucher nè 🎟️\n• GIAM5K: giảm 5k phí ship mọi đơn\n• FREESHIP: freeship đơn đồ ăn từ 150k\nBấm vào thẻ voucher ở trang chủ hoặc trong giỏ hàng để áp dụng nha!");
+  if(/(voucher|mã giảm|ma giam|khuyến mãi|khuyen mai|freeship)/.test(t))return()=>botMsg("Đang có 2 voucher nè 🎟️\n• GIAM5K: giảm 5k phí ship mọi đơn\n• FREESHIP: freeship đơn đồ ăn từ 150.000đ\nBấm vào thẻ voucher ở trang chủ hoặc trong giỏ hàng để áp dụng nha!");
   if(/(ô tô|o to|oto|4 chỗ|4 cho|7 chỗ|7 cho|sân bay|san bay|taxi|thuê xe|thue xe|đưa đón|dua don|xe hơi|xe hoi)/.test(t))return DEFAULT_QUICKIES[3][1];
   if(/(ship|phí|gia|giá|bao nhiêu|nhiu)/.test(t)&&/(ship|phí|giao)/.test(t))return DEFAULT_QUICKIES[4][1];
   if(/(cọc|coc|ứng|ung tien|boom|lừa|lua|an toàn|an toan)/.test(t))return DEFAULT_QUICKIES[5][1];
@@ -2088,7 +2157,7 @@ function handleChat(txt){
 document.getElementById('botFab').addEventListener('click',()=>{
   document.getElementById('botModal').classList.add('show');
   if(!chatlog.children.length){
-    botMsg("Chào bạn! Mình là GoBot 🤖 — trợ lý của Goship123.\nMình giúp được: đặt đồ ăn, xe ôm, ô tô 4-7 chỗ, đưa đón sân bay, thuê xe du lịch, mua hộ, voucher, theo dõi đơn... Bạn cần gì nè?");
+    botMsg("Chào bạn! Mình là GoBot — trợ lý của Goship123.\nMình giúp được: đặt đồ ăn, xe ôm, ô tô 4-7 chỗ, đưa đón sân bay, thuê xe du lịch, mua hộ, voucher, theo dõi đơn... Bạn cần gì nè?");
     setQuickies(DEFAULT_QUICKIES);
   }
 });
@@ -2126,7 +2195,7 @@ document.getElementById('wallSend').addEventListener('click',async()=>{
   }catch(e){toast("Lỗi mạng, thử lại nha");}
   btn.disabled=false;btn.textContent="Gửi bài 📨";
 });
-/* 🤖 QR Bot Zalo */
+/* QR Bot Zalo */
 document.querySelectorAll('#qrBotOpen,.jsQr').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();document.getElementById('qrBotModal').classList.add('show');}));
 document.getElementById('qrBotClose').addEventListener('click',()=>document.getElementById('qrBotModal').classList.remove('show'));
 document.getElementById('qrBotModal').addEventListener('click',e=>{if(e.target.id==='qrBotModal')e.target.classList.remove('show');});

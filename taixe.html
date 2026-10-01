@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Goship123 — Cổng tài xế</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0098EA">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ton:#0098EA;--ton2:#7DD3FC;--navy:#071422;--card:rgba(14,30,48,.8);--line:rgba(125,211,252,.22);--txt:#F4FAFF;--dim:#93A8C0;--ok:#2DD4BF;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--txt);font-family:'Be Vietnam Pro',sans-serif;min-height:100vh;padding-bottom:70px}
+.bg3d{position:fixed;inset:0;z-index:-1;overflow:hidden;perspective:800px}
+.road{position:absolute;left:-10%;right:-10%;bottom:0;height:140px;transform:perspective(280px) rotateX(58deg);transform-origin:bottom;
+  background:repeating-linear-gradient(90deg,transparent 0 48px,rgba(0,152,234,.45) 48px 80px);animation:run 1.4s linear infinite;opacity:.45}
+@keyframes run{to{background-position-x:80px}}
+.fly{position:absolute;font-size:26px;opacity:.7;animation:fly 16s linear infinite}
+.f1{top:16%}.f2{top:46%;animation-duration:22s;animation-delay:-6s}
+@keyframes fly{0%{left:-12%}100%{left:110%}}
+.cube{position:absolute;width:46px;height:46px;right:8%;top:22%;transform-style:preserve-3d;animation:spin 12s linear infinite}
+.cube i{position:absolute;inset:0;border:1px solid rgba(56,189,248,.5)}
+.cube i:nth-child(1){transform:translateZ(23px)} .cube i:nth-child(2){transform:rotateY(90deg) translateZ(23px)}
+.cube i:nth-child(3){transform:rotateY(180deg) translateZ(23px)} .cube i:nth-child(4){transform:rotateY(-90deg) translateZ(23px)}
+@keyframes spin{to{transform:rotateX(360deg) rotateY(360deg)}}
+.wrap{max-width:520px;margin:0 auto;padding:0 14px}
+header{display:flex;align-items:center;gap:10px;padding:16px 0}
+.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#38BDF8,#0098EA);display:grid;place-items:center;box-shadow:0 8px 18px rgba(0,152,234,.4)}
+h1{font-family:'Baloo 2';font-size:19px} h1 span{display:block;font-size:11px;color:var(--ton2);font-family:'Be Vietnam Pro';font-weight:600}
+.who{margin-left:auto;text-align:right;font-size:12px;color:var(--dim)} .who b{color:#fff;display:block}
+.card,.ord{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;backdrop-filter:blur(10px)}
+label{font-size:12px;color:var(--dim);display:block;margin:10px 0 6px}
+input,select{width:100%;background:#0B1C33;border:1.5px solid var(--line);border-radius:12px;padding:13px;color:#fff;font-size:16px;font-family:inherit}
+.cta{width:100%;border:none;border-radius:14px;padding:14px;font-family:'Baloo 2';font-size:16px;cursor:pointer;margin-top:12px;background:linear-gradient(120deg,#0369A1,#0098EA);color:#fff}
+.cta.gray{background:#16324A}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.tabs button{border:1.5px solid var(--line);background:var(--card);color:var(--dim);border-radius:12px;padding:11px;font-weight:800;cursor:pointer;font-family:inherit}
+.tabs button.on{background:var(--ton);color:#fff;border-color:var(--ton)}
+.ord .top{display:flex;justify-content:space-between;font-size:12px;color:var(--dim)}
+.ord .type{font-weight:800;margin-top:4px} .ord .detail{font-size:13px;line-height:1.45;margin:6px 0;color:#D7E6F4}
+.money{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.money div{background:#0B1C33;border-radius:12px;padding:8px;text-align:center}
+.money .l{font-size:10px;color:var(--dim)} .money .v{font-family:'Baloo 2';font-size:15px;color:var(--ton2)}
+.take{width:100%;border:none;border-radius:12px;padding:12px;font-family:'Baloo 2';font-size:16px;cursor:pointer;background:linear-gradient(120deg,#075985,#0098EA);color:#fff;margin-top:8px}
+.take.done{background:linear-gradient(120deg,#0F766E,#14B8A6)}
+.badge{font-size:10px;padding:3px 8px;border-radius:99px;font-weight:800;background:rgba(0,152,234,.2);color:var(--ton2)}
+.empty{text-align:center;color:var(--dim);padding:28px 8px}
+.hint{font-size:11.5px;color:var(--dim);line-height:1.5;margin-top:8px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:var(--ton);color:#fff;font-weight:800;padding:11px 16px;border-radius:99px;opacity:0;transition:.3s;z-index:9}
+.toast.show{opacity:1}
+#appView{display:none}
+.hero{border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid var(--line)}
+.hero img{width:100%;height:120px;object-fit:cover;display:block}
+
+html.gl-on #bgfx,html.gl-on .bg3d{display:none!important}
+html.gl-on .fall,html.gl-on .spark{animation:none!important;opacity:0!important}
+html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
+.sea{height:132px;border-radius:16px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(125,211,252,.25);background:#071422}.sea canvas{width:100%;height:100%;display:block}</style>
+</head>
+<body>
+<div class="bg3d"><div class="road"></div><span class="fly f1">🛵</span><span class="fly f2">🚗</span><div class="cube"><i></i><i></i><i></i><i></i></div></div>
+<div class="wrap">
+  <header>
+    <img src="assets/logo.svg" width="42" height="42" alt="Goship123" style="border-radius:14px;display:block">
+    <h1>Goship123<span>Cổng tài xế · % công khai</span></h1>
+    <div class="who" id="who"></div>
+  </header>
+  <div id="loginView">
+    <section class="sea" aria-label="Biển"><canvas id="seaStage"></canvas></section>
+    <div class="card">
+      <div style="font-family:'Baloo 2';font-size:17px">Đăng nhập</div>
+      <label>Số điện thoại</label><input id="phone" type="tel" placeholder="090...">
+      <label>Mã PIN</label><input id="pin" type="password" placeholder="••••">
+      <button class="cta" id="loginBtn">Vào nhận đơn</button>
+      <button class="cta gray" id="showReg">Chưa có tài khoản? Đăng ký</button>
+    </div>
+    <div class="card" id="regCard" style="display:none">
+      <div style="font-family:'Baloo 2'">Đăng ký chạy</div>
+      <label>Họ tên</label><input id="rName">
+      <label>SĐT</label><input id="rPhone" type="tel">
+      <label>Loại xe</label>
+      <select id="rVehicle"><option>Xe máy</option><option>Ô tô 4 chỗ</option><option>Ô tô 7 chỗ</option></select>
+      <label>Biển số</label><input id="rPlate">
+      <label>PIN tự đặt</label><input id="rPin">
+      <button class="cta" id="regBtn">Gửi hồ sơ</button>
+      <button class="cta gray" id="hideReg">Quay lại</button>
+    </div>
+  </div>
+  <div id="appView">
+    <div class="ord" id="tierBox"></div>
+    <div class="tabs">
+      <button class="on" id="tabOpen">Đơn chờ <span id="cOpen"></span></button>
+      <button id="tabMine">Đơn của tôi <span id="cMine"></span></button>
+    </div>
+    <div id="listOpen"></div>
+    <div id="listMine" style="display:none"></div>
+    <button class="cta gray" id="logoutBtn">Đăng xuất</button>
+    <div class="hint">Thu khách = tiền lấy khi xong cuốc. Bạn nhận = phần của bạn theo % sao. Quỹ web là khoản duy trì app, không phải tiền phạt. Trang tự làm mới 15 giây.</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const API = "https://funny-bobcat-4885.vaultadidas-collab.deno.net";
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString("vi")+"đ";
+let me=null; try{ me=JSON.parse(localStorage.getItem("gs_drv")||"null"); }catch(e){}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400);}
+function split(){try{const s=JSON.parse(localStorage.getItem("gs_split")||"null"); if(s&&s.bands) return s;}catch(e){}
+  return {web:5,plat:10,drv:85,bands:[{min:4.8,drv:90,web:4,plat:6,label:"Kim cương"},{min:4.5,drv:87,web:5,plat:8,label:"Vàng"},{min:4.0,drv:85,web:5,plat:10,label:"Bạc"},{min:0,drv:80,web:5,plat:15,label:"Cần kéo"}]};}
+function bandFor(avg,count){const s=split(); if(!count||count<10) return {drv:s.drv,web:s.web,plat:s.plat,label:"Tài xế mới"}; return s.bands.find(b=>avg>=b.min)||s.bands[s.bands.length-1];}
+function show(view){
+  $("loginView").style.display=view==="login"?"block":"none";
+  $("appView").style.display=view==="app"?"block":"none";
+  $("who").innerHTML=me?`Tài xế<b>${me.name}</b>`:"";
+}
+$("loginBtn").onclick=async()=>{
+  const phone=$("phone").value.trim(), pin=$("pin").value.trim();
+  if(!phone||!pin) return toast("Điền đủ");
+  try{
+    const r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({phone,pin})});
+    const d=await r.json();
+    if(d.ok){ me={phone,pin,name:d.name}; localStorage.setItem("gs_drv",JSON.stringify(me)); show("app"); load(); toast("Chào "+d.name); }
+    else toast(d.err||"Sai PIN");
+  }catch(e){ toast("Lỗi mạng"); }
+};
+$("logoutBtn").onclick=()=>{ localStorage.removeItem("gs_drv"); me=null; show("login"); };
+$("showReg").onclick=()=>{ $("regCard").style.display="block"; };
+$("hideReg").onclick=()=>{ $("regCard").style.display="none"; };
+$("regBtn").onclick=async()=>{
+  const p={name:$("rName").value.trim(),phone:$("rPhone").value.trim(),vehicle:$("rVehicle").value,plate:$("rPlate").value.trim(),pin:$("rPin").value.trim()};
+  if(!p.name||!p.phone||!p.pin) return toast("Điền đủ");
+  try{
+    const r=await fetch(API+"/api/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});
+    const d=await r.json(); toast(d.ok?"Đã gửi, chờ duyệt":(d.err||"Lỗi"));
+  }catch(e){ toast("Lỗi mạng"); }
+};
+function tab(t){
+  $("tabOpen").classList.toggle("on",t==="open"); $("tabMine").classList.toggle("on",t==="mine");
+  $("listOpen").style.display=t==="open"?"block":"none"; $("listMine").style.display=t==="mine"?"block":"none";
+}
+$("tabOpen").onclick=()=>tab("open"); $("tabMine").onclick=()=>tab("mine");
+async function loadStats(){
+  const s=split();
+  try{
+    const r=await fetch(`${API}/api/driver/stats?phone=${encodeURIComponent(me.phone)}&pin=${encodeURIComponent(me.pin)}`);
+    const d=await r.json(); if(!d.ok) return;
+    const b=bandFor(d.avg||0,d.count||0);
+    $("tierBox").innerHTML=`<div class="type">★ ${d.count?d.avg.toFixed(2):"Chưa có"} · ${b.label}</div>
+      <div class="detail">Bạn giữ <b style="color:#7DD3FC">${b.drv}%</b> · quỹ web ${b.web}% · điều hành ${b.plat}%. ${d.count<10?"Đủ 10 lượt chấm sẽ lên bậc.":""} Server hiện báo phí nền tảng ${d.cut}% — số % xanh là luật mới admin vừa chốt.</div>`;
+  }catch(e){
+    const b=bandFor(0,0);
+    $("tierBox").innerHTML=`<div class="type">Luật chia</div><div class="detail">Bạn giữ ${b.drv}% · web ${b.web}% · điều hành ${b.plat}%.</div>`;
+  }
+}
+async function load(){
+  if(!me) return; loadStats();
+  try{
+    const r=await fetch(`${API}/api/driver/orders?phone=${encodeURIComponent(me.phone)}&pin=${encodeURIComponent(me.pin)}`);
+    if(r.status===401){ me=null; localStorage.removeItem("gs_drv"); show("login"); return; }
+    const d=await r.json(); if(!d.ok) return;
+    $("cOpen").textContent=d.open.length?`(${d.open.length})`:"";
+    $("cMine").textContent=d.mine.filter(o=>o.status==="taken").length?`(${d.mine.filter(o=>o.status==="taken").length})`:"";
+    $("listOpen").innerHTML=d.open.length?d.open.map(o=>ordCard(o,"open")).join(""):`<div class="empty">Chưa có đơn mới.</div>`;
+    $("listMine").innerHTML=d.mine.length?d.mine.map(o=>ordCard(o,"mine")).join(""):`<div class="empty">Chưa nhận đơn nào.</div>`;
+  }catch(e){}
+}
+function ordCard(o,mode){
+  const b=bandFor(0,0);
+  const mine=Math.round((o.fare||0)*b.drv/100), web=Math.round((o.fare||0)*b.web/100);
+  const time=new Date(o.t).toLocaleTimeString("vi",{hour:"2-digit",minute:"2-digit"});
+  const btn=mode==="open"?`<button class="take" onclick="accept('${o.code}')">Nhận đơn</button>`:(o.status==="taken"?`<button class="take done" onclick="finish('${o.code}')">Đã giao xong</button>`:"");
+  return `<div class="ord"><div class="top"><span>#${o.code} · ${time}</span>${o.status==="taken"?'<span class="badge">ĐANG CHẠY</span>':""}</div>
+    <div class="type">${o.type}</div><div class="detail">${o.detail}</div>
+    <div class="money"><div><div class="l">THU KHÁCH</div><div class="v">${fmt(o.fare)}</div></div>
+    <div><div class="l">BẠN NHẬN</div><div class="v">${fmt(o.pay)}</div></div>
+    <div><div class="l">QUỸ WEB</div><div class="v">${fmt(web)}</div></div></div>${btn}</div>`;
+}
+window.accept=async(code)=>{
+  try{
+    const r=await fetch(API+"/api/accept",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...me,code})});
+    const d=await r.json(); toast(d.ok?"Đơn là của bạn":(d.err||"Không nhận được"));
+    if(d.ok) tab("mine");
+  }catch(e){ toast("Lỗi mạng"); }
+  load();
+};
+window.finish=async(code)=>{
+  try{
+    const r=await fetch(API+"/api/done",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...me,code})});
+    const d=await r.json(); toast(d.ok?"Đã ghi sổ":"Chưa xong");
+  }catch(e){ toast("Lỗi mạng"); }
+  load();
+};
+setInterval(load,15000);
+show(me?"app":"login"); if(me) load();
+</script>
+<script src="assets/webgl.js" defer></script>
+</body>
+</html>

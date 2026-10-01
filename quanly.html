@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goship123 — Sổ điều hành</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0098EA">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ton:#0098EA;--ton2:#38BDF8;--navy:#071422;--card:rgba(16,32,52,.78);--line:rgba(125,211,252,.22);--txt:#F4FAFF;--dim:#93A8C0;--ok:#2DD4BF;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--navy);color:var(--txt);font-family:'Be Vietnam Pro',sans-serif;padding-bottom:60px;min-height:100vh}
+.bg3d{position:fixed;inset:0;z-index:-1;overflow:hidden;perspective:900px}
+.bg3d .orb{position:absolute;border-radius:50%;filter:blur(30px);opacity:.55;animation:float 14s ease-in-out infinite alternate}
+.o1{width:280px;height:280px;background:#0098EA;left:-80px;top:-40px}
+.o2{width:220px;height:220px;background:#0EA5E9;right:-60px;bottom:10%;animation-delay:-4s}
+.gem{position:absolute;width:70px;height:70px;left:78%;top:18%;transform-style:preserve-3d;animation:spin 16s linear infinite}
+.gem i{position:absolute;inset:0;border:1px solid rgba(56,189,248,.55);background:rgba(0,152,234,.08)}
+.gem i:nth-child(1){transform:translateZ(35px)}
+.gem i:nth-child(2){transform:rotateY(90deg) translateZ(35px)}
+.gem i:nth-child(3){transform:rotateY(180deg) translateZ(35px)}
+.gem i:nth-child(4){transform:rotateY(-90deg) translateZ(35px)}
+.gem i:nth-child(5){transform:rotateX(90deg) translateZ(35px)}
+.gem i:nth-child(6){transform:rotateX(-90deg) translateZ(35px)}
+@keyframes spin{to{transform:rotateX(360deg) rotateY(360deg)}}
+@keyframes float{to{transform:translate3d(30px,24px,40px) scale(1.1)}}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px}
+header{padding:18px 0 12px;display:flex;align-items:center;gap:10px}
+.mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#38BDF8,#0098EA);display:grid;place-items:center;font-size:20px;box-shadow:0 8px 20px rgba(0,152,234,.4);animation:bob 4.5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px) rotateY(18deg)}}
+h1{font-family:'Baloo 2';font-size:20px}h1 span{color:var(--ton2);font-size:12px;display:block;font-family:'Be Vietnam Pro';font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;backdrop-filter:blur(12px)}
+input,select{width:100%;background:#0B1C33;border:1.5px solid var(--line);border-radius:12px;padding:12px;color:var(--txt);font-size:15px;font-family:inherit;margin-top:6px}
+input:focus{outline:none;border-color:var(--ton)}
+.cta{width:100%;border:none;border-radius:13px;padding:14px;font-family:'Baloo 2';font-size:16px;cursor:pointer;margin-top:12px;background:linear-gradient(120deg,#0369A1,var(--ton));color:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;text-align:center;backdrop-filter:blur(10px)}
+.stat .l{font-size:11px;color:var(--dim)} .stat .v{font-family:'Baloo 2';font-size:20px;color:var(--ton2)}
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.tabs button{border:1.5px solid var(--line);background:var(--card);color:var(--dim);border-radius:12px;padding:9px 4px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit}
+.tabs button.on{background:var(--ton);border-color:var(--ton);color:#fff}
+.ord,.pend,.drv{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:9px;font-size:13px}
+.ord .top{display:flex;justify-content:space-between;color:var(--dim);font-size:11.5px;margin-bottom:4px}
+.ord .type,.pend .t{font-weight:800;font-size:14px}
+.ord .detail{color:#D5E4F2;margin:4px 0;line-height:1.45}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:8px 0 4px;text-align:center}
+.row3 div{background:#0B1C33;border-radius:10px;padding:7px 2px}
+.row3 .l{font-size:9.5px;color:var(--dim)} .row3 .v{font-family:'Baloo 2';font-size:14px}
+.v.thu{color:var(--ton2)}.v.tx{color:#7DD3FC}.v.loi{color:var(--ok)}
+.badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:800}
+.s-open{background:rgba(56,189,248,.15);color:var(--ton2)}
+.s-taken{background:rgba(0,152,234,.2);color:#7DD3FC}
+.s-done{background:rgba(45,212,191,.18);color:var(--ok)}
+.s-cancel{background:rgba(248,113,113,.15);color:#FCA5A5}
+.mini{display:flex;gap:6px;margin-top:8px}
+.mini button,.drv button{flex:1;border:1px solid var(--line);background:#0B1C33;color:var(--txt);border-radius:9px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.drv{display:flex;align-items:center;gap:10px}
+.drv .av{width:38px;height:38px;border-radius:50%;background:#0B1C33;display:grid;place-items:center}
+.drv .inf{flex:1;font-size:13px}.drv .inf small{color:var(--dim);display:block}
+.drv button{flex:none}
+.off{opacity:.45}
+.empty{text-align:center;color:var(--dim);padding:26px;font-size:13px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--ton);color:#fff;font-weight:800;font-size:13px;padding:10px 18px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+#appView{display:none}
+.pend .act{display:flex;gap:8px;margin-top:8px}
+.pend .act button{flex:1;border:none;border-radius:10px;padding:10px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit}
+.ok{background:#0F766E;color:#fff}.no{background:rgba(248,113,113,.2);color:#FCA5A5}
+label{font-size:12px;color:var(--dim);font-weight:700;display:block;margin-top:8px}
+.band{display:grid;grid-template-columns:1.1fr .7fr .7fr .7fr;gap:6px;margin-top:6px}
+.band input{margin:0;padding:8px;font-size:13px}
+.note{font-size:11.5px;color:var(--dim);line-height:1.5;margin-top:8px}
+
+html.gl-on #bgfx,html.gl-on .bg3d{display:none!important}
+html.gl-on .fall,html.gl-on .spark{animation:none!important;opacity:0!important}
+html.gl-on .tonhero img,html.gl-on .tonfood img{animation:none}
+.sea{height:132px;border-radius:16px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(125,211,252,.25);background:#071422}.sea canvas{width:100%;height:100%;display:block}</style>
+</head>
+<body>
+<div class="bg3d"><div class="orb o1"></div><div class="orb o2"></div><div class="gem"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="wrap">
+  <header><img src="assets/logo.svg" width="42" height="42" alt="Goship123" style="border-radius:14px;display:block"><h1>Goship123<span>Sổ điều hành · xanh TON</span></h1></header>
+  <div id="loginView" class="card">
+    <div style="font-family:'Baloo 2';font-size:16px">Khóa quản lý</div>
+    <input id="key" type="password" placeholder="Nhập ADMIN_KEY">
+    <button class="cta" id="loginBtn">Mở sổ</button>
+  </div>
+  <section class="sea" aria-label="Biển"><canvas id="seaStage"></canvas></section>
+  <div id="appView">
+    <div class="stats">
+      <div class="stat"><div class="l">LỜI SERVER HÔM NAY</div><div class="v" id="pToday">—</div></div>
+      <div class="stat"><div class="l">LỜI SERVER TỔNG</div><div class="v" id="pAll">—</div></div>
+      <div class="stat"><div class="l">QUỸ WEB (luật mới)</div><div class="v" id="pWeb">—</div></div>
+      <div class="stat"><div class="l">TÀI XẾ GIỮ (luật mới)</div><div class="v" id="pDrv">—</div></div>
+    </div>
+    <div class="tabs">
+      <button class="on" id="tabOrd">Đơn</button>
+      <button id="tabDrv">Tài xế</button>
+      <button id="tabNews">Tin</button>
+      <button id="tabRev">% Chia</button>
+    </div>
+    <div id="viewOrd"><div id="listOrd"></div></div>
+    <div id="viewNews" style="display:none">
+      <div class="card">
+        <div style="font-family:'Baloo 2'">Đăng tin</div>
+        <label>Tiêu đề</label><input id="nTitle" maxlength="80" placeholder="Freeship cuối tuần">
+        <label>Nội dung</label><input id="nMsg" maxlength="500" placeholder="Áp dụng T7–CN">
+        <button class="cta" id="nAdd">Đăng tin</button>
+      </div>
+      <div id="pendWall"></div><div id="listFeed"></div>
+    </div>
+    <div id="viewDrv" style="display:none">
+      <div id="pendBox"></div>
+      <div class="card">
+        <div style="font-family:'Baloo 2'">Thêm / sửa tài xế</div>
+        <label>Tên</label><input id="dName" placeholder="Anh Tí">
+        <label>SĐT</label><input id="dPhone" type="tel" placeholder="090...">
+        <label>PIN</label><input id="dPin" placeholder="2468">
+        <button class="cta" id="addDrv">Lưu tài xế</button>
+      </div>
+      <div id="listDrv"></div>
+    </div>
+    <div id="viewRev" style="display:none">
+      <div class="card">
+        <div style="font-family:'Baloo 2';font-size:16px">Luật chia % — 3 bên cùng vui</div>
+        <p class="note">Khách trả 100%. Tài xế giỏi giữ nhiều hơn. Quỹ web là khoản cố định để domain, Deno và QR không chết. Phần còn lại là điều hành. Tổng luôn = 100.</p>
+        <label>Tài xế giữ % (mặc định, chưa đủ 10 sao)</label><input id="bDrv" type="number" min="50" max="95">
+        <label>Quỹ duy trì web %</label><input id="bWeb" type="number" min="1" max="20">
+        <label>Điều hành %</label><input id="bPlat" type="number" min="0" max="40">
+        <div class="note">Bậc theo sao khách chấm (áp khi tài xế đủ 10 lượt):</div>
+        <div class="band"><span></span><span style="font-size:10px;color:var(--dim)">TX%</span><span style="font-size:10px;color:var(--dim)">WEB%</span><span style="font-size:10px;color:var(--dim)">ĐH%</span></div>
+        <div id="bands"></div>
+        <button class="cta" id="saveSplit">Lưu luật — khách và tài xế thấy ngay</button>
+        <div class="note" id="revNote"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const API = "https://funny-bobcat-4885.vaultadidas-collab.deno.net";
+const $=id=>document.getElementById(id);
+const fmt=n=>(n||0).toLocaleString("vi")+"đ";
+let KEY = localStorage.getItem("gs_admin")||"";
+let LAST = null;
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400);}
+function show(v){$("loginView").style.display=v==="login"?"block":"none";$("appView").style.display=v==="app"?"block":"none";}
+function defaultSplit(){return {web:5,plat:10,drv:85,bands:[
+  {min:4.8,drv:90,web:4,plat:6,label:"Kim cương ≥4.8"},
+  {min:4.5,drv:87,web:5,plat:8,label:"Vàng ≥4.5"},
+  {min:4.0,drv:85,web:5,plat:10,label:"Bạc ≥4.0"},
+  {min:0,drv:80,web:5,plat:15,label:"Cần kéo <4.0"}
+]};}
+function getSplit(){try{const s=JSON.parse(localStorage.getItem("gs_split")||"null"); if(s&&s.bands) return s;}catch(e){} return defaultSplit();}
+function paintBands(){
+  const s=getSplit();
+  $("bDrv").value=s.drv; $("bWeb").value=s.web; $("bPlat").value=s.plat;
+  $("bands").innerHTML=s.bands.map((b,i)=>`<div class="band">
+    <input data-i="${i}" data-k="label" value="${b.label}">
+    <input data-i="${i}" data-k="drv" type="number" value="${b.drv}">
+    <input data-i="${i}" data-k="web" type="number" value="${b.web}">
+    <input data-i="${i}" data-k="plat" type="number" value="${b.plat}">
+  </div>`).join("");
+}
+$("saveSplit").addEventListener("click",()=>{
+  const s=getSplit();
+  s.drv=+$("bDrv").value; s.web=+$("bWeb").value; s.plat=+$("bPlat").value;
+  if(s.drv+s.web+s.plat!==100) return toast("3 ô mặc định phải cộng đủ 100");
+  document.querySelectorAll("#bands input").forEach(inp=>{
+    const i=+inp.dataset.i, k=inp.dataset.k;
+    s.bands[i][k]= k==="label"? inp.value : +inp.value;
+  });
+  for(const b of s.bands){ if(b.drv+b.web+b.plat!==100) return toast(b.label+" chưa đủ 100"); }
+  localStorage.setItem("gs_split", JSON.stringify(s));
+  toast("Đã lưu. Cùng domain là khách + tài xế thấy % mới");
+  sim();
+});
+function sim(){
+  if(!LAST) return;
+  const s=getSplit();
+  const done=(LAST.orders||[]).filter(o=>o.status==="done");
+  const gross=done.reduce((a,o)=>a+(o.fare||0),0);
+  $("pWeb").textContent=fmt(Math.round(gross*s.web/100));
+  $("pDrv").textContent=fmt(Math.round(gross*s.drv/100));
+  $("revNote").textContent=`Mô phỏng trên ${done.length} đơn xong, tổng thu khách ${fmt(gross)}. Server vẫn đang trả lời theo cut cũ (${fmt(LAST.profitToday)} lời hôm nay). Luật mới là sổ mày chốt khi đối soát — quỹ web ${s.web}% không đụng vào phần tài xế giỏi.`;
+}
+$("loginBtn").addEventListener("click",()=>{ KEY=$("key").value.trim(); if(!KEY)return toast("Nhập khóa"); localStorage.setItem("gs_admin",KEY); show("app"); load(); });
+function tab(t){
+  ["ord","drv","news","rev"].forEach(k=>$("tab"+k[0].toUpperCase()+k.slice(1)).classList.toggle("on",k===t));
+  $("viewOrd").style.display=t==="ord"?"block":"none";
+  $("viewDrv").style.display=t==="drv"?"block":"none";
+  $("viewNews").style.display=t==="news"?"block":"none";
+  $("viewRev").style.display=t==="rev"?"block":"none";
+  if(t==="news") loadFeedA();
+  if(t==="rev"){paintBands(); sim();}
+}
+$("tabOrd").onclick=()=>tab("ord"); $("tabDrv").onclick=()=>tab("drv"); $("tabNews").onclick=()=>tab("news"); $("tabRev").onclick=()=>tab("rev");
+async function loadFeedA(){
+  try{
+    const r=await fetch(`${API}/api/admin/feed?key=${encodeURIComponent(KEY)}`);
+    const d=await r.json(); if(!d.ok)return;
+    const esc=x=>{const e=document.createElement("div");e.textContent=x||"";return e.innerHTML;};
+    const dt=t=>new Date(t).toLocaleString("vi",{hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit"});
+    const pend=d.posts.filter(p=>p.kind==="wall"&&!p.ok);
+    $("pendWall").innerHTML = pend.map(p=>`<div class="pend"><div class="t">${esc(p.name)}</div><div class="detail">"${esc(p.msg)}" · ${dt(p.t)}</div>
+      <div class="act"><button class="ok" onclick="feedAct('${p.id}','ok')">Duyệt</button><button class="no" onclick="feedAct('${p.id}','del')">Xóa</button></div></div>`).join("");
+    $("listFeed").innerHTML = d.posts.filter(p=>p.kind==="news"||p.ok).map(p=>`<div class="ord"><div class="top"><span>${p.kind==="news"?"TIN":esc(p.name)} · ${dt(p.t)}</span></div>
+      ${p.title?`<div class="type">${esc(p.title)}</div>`:""}<div class="detail">${esc(p.msg)}</div>
+      <div class="mini"><button onclick="feedAct('${p.id}','del')">Gỡ</button></div></div>`).join("")||`<div class="empty">Chưa có tin</div>`;
+  }catch(e){}
+}
+window.feedAct=async(id,action)=>{
+  await fetch(API+"/api/admin/feedpost",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,id,action})}).catch(()=>{});
+  toast("Đã cập nhật"); loadFeedA();
+};
+$("nAdd").onclick=async()=>{
+  const title=$("nTitle").value.trim(), msg=$("nMsg").value.trim();
+  if(!title||!msg) return toast("Điền đủ");
+  await fetch(API+"/api/admin/feedpost",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,action:"add",title,msg})}).catch(()=>{});
+  $("nTitle").value=$("nMsg").value=""; toast("Đã đăng"); loadFeedA();
+};
+window.RT={};
+async function load(){
+  try{const r=await fetch(API+"/api/admin/ratings?key="+encodeURIComponent(KEY)); const j=await r.json(); if(j.ok) window.RT=j.map||{};}catch(e){}
+  try{
+    const r=await fetch(`${API}/api/admin/all?key=${encodeURIComponent(KEY)}`);
+    if(r.status===401){toast("Sai khóa"); localStorage.removeItem("gs_admin"); show("login"); return;}
+    const d=await r.json(); if(!d.ok) return;
+    LAST=d;
+    $("pToday").textContent=fmt(d.profitToday); $("pAll").textContent=fmt(d.profitAll);
+    $("listOrd").innerHTML=d.orders.length?d.orders.map(ordCard).join(""):`<div class="empty">Chưa có đơn.</div>`;
+    const pend=d.drivers.filter(x=>x.pending), act=d.drivers.filter(x=>!x.pending);
+    $("pendBox").innerHTML=pend.map(p=>`<div class="pend"><div class="t">${p.name}</div><div class="detail">${p.phone} · ${p.vehicle||"?"} ${p.plate||""}</div>
+      <div class="act"><button class="ok" onclick="approve('${p.phone}',true)">Duyệt</button><button class="no" onclick="approve('${p.phone}',false)">Từ chối</button></div></div>`).join("");
+    $("listDrv").innerHTML=act.length?act.map(drvCard).join(""):`<div class="empty">Chưa có tài xế.</div>`;
+    sim();
+  }catch(e){}
+}
+const S={open:["s-open","CHỜ"],taken:["s-taken","ĐANG CHẠY"],done:["s-done","XONG"],cancel:["s-cancel","HỦY"]};
+function ordCard(o){
+  const [cls,txt]=S[o.status]||S.open;
+  const time=new Date(o.t).toLocaleString("vi",{hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit"});
+  return `<div class="ord"><div class="top"><span>#${o.code} · ${time}${o.drv?` · ${o.drv.name}`:""}</span><span class="badge ${cls}">${txt}</span></div>
+    <div class="type">${o.type}</div><div class="detail">${o.detail}</div>
+    <div class="row3"><div><div class="l">THU KHÁCH</div><div class="v thu">${fmt(o.fare)}</div></div>
+    <div><div class="l">TÀI XẾ</div><div class="v tx">${fmt(o.pay)}</div></div>
+    <div><div class="l">LỜI SERVER</div><div class="v loi">${fmt(o.profit)}</div></div></div>
+    <div class="mini">${o.status!=="done"?`<button onclick="act('${o.code}','done')">Xong</button>`:""}
+    ${o.status==="taken"?`<button onclick="act('${o.code}','reopen')">Thả lại</button>`:""}
+    ${o.status!=="cancel"&&o.status!=="done"?`<button onclick="act('${o.code}','cancel')">Hủy</button>`:""}</div></div>`;
+}
+window.act=async(code,action)=>{
+  await fetch(API+"/api/admin/order",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,code,action})}).catch(()=>{});
+  toast("Đã cập nhật"); load();
+};
+function drvCard(d){
+  const r=RT[d.phone];
+  const star=r&&r.count?`★ ${r.avg.toFixed(2)} (${r.count}) · server giữ ${r.cut}%`:"chưa có sao · server giữ 15%";
+  return `<div class="drv ${d.active===false?"off":""}"><div class="av">🛵</div>
+    <div class="inf"><b>${d.name}</b><small>${d.phone}${d.plate?" · "+d.plate:""} · ${d.active===false?"KHÓA":"đang chạy"}<br>${star}</small></div>
+    <button onclick="togDrv('${d.phone}',${d.active===false})">${d.active===false?"Mở":"Khóa"}</button>
+    <button onclick="delDrv('${d.phone}')">Xóa</button></div>`;
+}
+window.approve=async(phone,ok)=>{
+  if(!ok && !confirm("Từ chối "+phone+"?")) return;
+  await fetch(API+"/api/admin/driver",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,phone,approve:ok})}).catch(()=>{});
+  toast(ok?"Đã duyệt":"Đã từ chối"); load();
+};
+$("addDrv").onclick=async()=>{
+  const name=$("dName").value.trim(),phone=$("dPhone").value.trim(),pin=$("dPin").value.trim();
+  if(!name||!phone||!pin) return toast("Điền đủ");
+  const r=await fetch(API+"/api/admin/driver",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,name,phone,pin,active:true})});
+  const d=await r.json(); toast(d.ok?"Đã lưu":"Lỗi"); load();
+};
+window.togDrv=async(phone,open)=>{
+  await fetch(API+"/api/admin/driver",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,phone,toggle:open})}).catch(()=>{});
+  load();
+};
+window.delDrv=async(phone)=>{
+  if(!confirm("Xóa "+phone+"?")) return;
+  await fetch(API+"/api/admin/driver",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,phone,del:true})}).catch(()=>{});
+  load();
+};
+setInterval(()=>{ if(KEY && $("appView").style.display!=="none") load(); },20000);
+paintBands();
+if(KEY){show("app");load();} else show("login");
+</script>
+<script src="assets/webgl.js" defer></script>
+</body>
+</html>
