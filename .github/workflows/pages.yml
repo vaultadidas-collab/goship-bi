@@ -20,15 +20,22 @@ jobs:
       - uses: actions/checkout@v4
       - name: Assemble index.html from staging
         run: |
-          if [ -f index.html.gz.b64 ]; then
+          set -euo pipefail
+          if [ -s index.html.gz.b64 ]; then
             base64 -d index.html.gz.b64 | gzip -dc > index.html
             rm -f index.html.gz.b64
           elif ls index.html.gz.b64.* >/dev/null 2>&1; then
-            cat index.html.gz.b64.* | base64 -d | gzip -dc > index.html
+            cat $(ls index.html.gz.b64.* | sort -V) | base64 -d | gzip -dc > index.html
             rm -f index.html.gz.b64.*
           elif [ -d ._index_b64 ]; then
             cat ._index_b64/p* | base64 -d | gzip -dc > index.html
             rm -rf ._index_b64
+          fi
+          test -s index.html
+          wc -c index.html
+          # drop empty staging leftover
+          if [ -f index.html.gz.b64 ] && [ ! -s index.html.gz.b64 ]; then
+            rm -f index.html.gz.b64
           fi
       - uses: actions/upload-pages-artifact@v3
         with:
