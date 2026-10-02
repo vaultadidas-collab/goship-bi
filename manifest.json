@@ -1,0 +1,19 @@
+{
+  "name": "Goship123 — Phú Quốc",
+  "short_name": "Goship123",
+  "description": "Đặt đồ ăn, xe ôm, ô tô và mua hộ tại Phú Quốc",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#E7F3FC",
+  "theme_color": "#0098EA",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
