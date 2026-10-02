@@ -1,149 +1,222 @@
-/* Sóng Phú Quốc — ngân sách pixel thấp, dừng khi khuất / tab ẩn. */
+/* Goship123 — GPU-friendly Phú Quốc sea canvas. No-op on failure / reduced motion. */
 (function () {
-  if (window.__gsSea) return;
-  var canvas = document.getElementById("seaStage");
-  if (!canvas) return;
-  window.__gsSea = true;
-
-  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var mobile = matchMedia("(max-width: 768px)").matches || matchMedia("(pointer: coarse)").matches;
-  var saveData = navigator.connection && navigator.connection.saveData;
-  if (reduce || saveData) {
-    canvas.style.background = "linear-gradient(#0b3a5c,#071422)";
-    return;
-  }
-
-  var gl = canvas.getContext("webgl", {
-    alpha: false,
-    antialias: false,
-    depth: false,
-    stencil: false,
-    desynchronized: true,
-    powerPreference: "low-power",
-    preserveDrawingBuffer: false,
-    failIfMajorPerformanceCaveat: false
-  });
-  if (!gl) return;
-
-  var vs = "attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}";
-  var fs = [
-    "precision lowp float;",
-    "uniform vec2 uR;",
-    "uniform vec4 uP;",
-    "uniform vec4 uD;",
-    "void main(){",
-    "  vec2 uv=gl_FragCoord.xy/uR; uv=uv*2.0-1.0; uv.x*=uR.x/uR.y;",
-    "  float w=sin(uv.x*1.6+uP.x)*0.04;",
-    "  float seaY=-0.18+w;",
-    "  float sea=clamp((seaY+0.02-uv.y)*22.0,0.0,1.0);",
-    "  vec3 col=mix(vec3(0.04,0.16,0.32),vec3(0.02,0.08,0.16),uv.y);",
-    "  col=mix(col,mix(vec3(0.0,0.32,0.52),vec3(0.01,0.08,0.18),clamp((seaY-uv.y)*1.4,0.0,1.0)),sea);",
-    "  col+=vec3(0.55,0.75,0.9)*clamp(1.0-abs(uv.y-seaY)*36.0,0.0,1.0)*0.28*sea;",
-    "  vec2 q=uv-uD.xy;",
-    "  if(uD.w>0.01 && abs(q.x)<0.32 && abs(q.y)<0.2){",
-    "    vec2 b=q/vec2(0.2,0.055);",
-    "    float d=dot(b,b)-1.0;",
-    "    col=mix(col,vec3(0.82,0.93,0.98),clamp(1.0-d*8.0,0.0,1.0)*uD.w);",
-    "  }",
-    "  gl_FragColor=vec4(col,1.0);",
-    "}"
-  ].join("");
-
-  function compile(type, src) {
-    var s = gl.createShader(type);
-    gl.shaderSource(s, src);
-    gl.compileShader(s);
-    return s;
-  }
-  var prog = gl.createProgram();
-  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
-  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
-  gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
-  gl.useProgram(prog);
-
-  var buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
-  var loc = gl.getAttribLocation(prog, "a");
-  gl.enableVertexAttribArray(loc);
-  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-  var uR = gl.getUniformLocation(prog, "uR");
-  var uP = gl.getUniformLocation(prog, "uP");
-  var uD = gl.getUniformLocation(prog, "uD");
-
-  var dprCap = mobile ? 0.75 : 1;
-  var pixelCap = mobile ? 70000 : 180000;
-  var frameMs = mobile ? 1000 / 18 : 1000 / 28;
-  var w = 0, h = 0, onScreen = true, running = false, last = 0, acc = 0, t0 = 0, resizeTimer = 0;
-
-  function pose(t) {
-    var cyc = t % 9;
-    if (cyc > 2.4) return [0, -0.4, 0, 0];
-    var u = cyc / 2.3;
-    var up = Math.sin(u * Math.PI);
-    return [(-0.9 + 1.8 * u), (-0.16 + up * 0.5), 0.4, 1];
-  }
-  function resize() {
-    var dpr = Math.min(window.devicePixelRatio || 1, dprCap);
-    var nw = Math.max(1, Math.floor(canvas.clientWidth * dpr));
-    var nh = Math.max(1, Math.floor(canvas.clientHeight * dpr));
-    if (nw * nh > pixelCap) {
-      var s = Math.sqrt(pixelCap / (nw * nh));
-      nw = Math.max(1, Math.floor(nw * s));
-      nh = Math.max(1, Math.floor(nh * s));
+  "use strict";
+  try {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("gl-reduced");
+      return;
     }
-    if (nw === w && nh === h) return;
-    w = nw; h = nh;
-    canvas.width = w; canvas.height = h;
-    gl.viewport(0, 0, w, h);
-  }
-  function draw(now) {
-    if (!w || !h) return;
-    var t = (now - t0) / 1000;
-    var p = pose(t);
-    gl.uniform2f(uR, w, h);
-    gl.uniform4f(uP, t * 0.7, 0, 0, 0);
-    gl.uniform4f(uD, p[0], p[1], p[2], p[3]);
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
-  }
-  function loop(now) {
-    if (!running) return;
-    requestAnimationFrame(loop);
-    acc += now - last;
-    last = now;
-    if (acc < frameMs) return;
-    acc = 0;
-    draw(now);
-  }
-  function sync() {
-    var want = !document.hidden && onScreen;
-    if (want && !running) {
-      running = true;
-      last = performance.now();
-      if (!t0) t0 = last;
-      requestAnimationFrame(loop);
-    } else if (!want) running = false;
-  }
-  function boot() {
-    resize();
-    t0 = performance.now();
-    draw(t0);
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        onScreen = !!(entries[0] && entries[0].isIntersecting);
-        sync();
-      }, { rootMargin: "0px" }).observe(canvas);
+    document.documentElement.classList.add("gl-on");
+
+    var canvas = document.getElementById("seaStage");
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, t0 = performance.now(), raf = 0, running = true, visible = true;
+
+    function resize() {
+      var r = canvas.getBoundingClientRect();
+      W = Math.max(1, Math.floor(r.width));
+      H = Math.max(1, Math.floor(r.height));
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
-    document.addEventListener("visibilitychange", sync);
+
+    function wave(y, amp, len, speed, phase, color) {
+      ctx.beginPath();
+      ctx.moveTo(0, H);
+      for (var x = 0; x <= W; x += 5) {
+        var yy = y + Math.sin((x / len) + phase + speed) * amp
+          + Math.sin((x / (len * 1.65)) - phase * 0.55) * (amp * 0.32);
+        ctx.lineTo(x, yy);
+      }
+      ctx.lineTo(W, H);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    function cloud(cx, cy, s, a) {
+      ctx.save();
+      ctx.globalAlpha = a;
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 18 * s, 8 * s, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx - 12 * s, cy + 2 * s, 10 * s, 6 * s, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx + 14 * s, cy + 1 * s, 11 * s, 6.5 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function boat(cx, cy, s) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(s, s);
+      ctx.fillStyle = "rgba(255,255,255,0.88)";
+      ctx.beginPath();
+      ctx.moveTo(-10, 0);
+      ctx.lineTo(12, 0);
+      ctx.lineTo(8, 5);
+      ctx.lineTo(-7, 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = "rgba(125,211,252,0.95)";
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -11);
+      ctx.lineTo(8, -2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function dolphin(cx, cy, s, a) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(a);
+      ctx.scale(s, s);
+      ctx.fillStyle = "rgba(125,211,252,0.9)";
+      ctx.beginPath();
+      ctx.moveTo(-14, 2);
+      ctx.quadraticCurveTo(-4, -8, 10, -2);
+      ctx.quadraticCurveTo(16, 0, 14, 4);
+      ctx.quadraticCurveTo(2, 6, -10, 6);
+      ctx.quadraticCurveTo(-16, 8, -14, 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(2, -4);
+      ctx.quadraticCurveTo(0, -12, -6, -6);
+      ctx.quadraticCurveTo(0, -5, 2, -4);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function frame(now) {
+      if (!running || !visible) return;
+      var t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+
+      /* sky — deep navy → Ton blue */
+      var g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#06101C");
+      g.addColorStop(0.38, "#0A3A5C");
+      g.addColorStop(0.72, "#0098EA");
+      g.addColorStop(1, "#14B8A6");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+
+      /* sun / horizon glow */
+      var sg = ctx.createRadialGradient(W * 0.76, H * 0.2, 2, W * 0.76, H * 0.2, H * 0.5);
+      sg.addColorStop(0, "rgba(255,236,179,0.38)");
+      sg.addColorStop(0.35, "rgba(125,211,252,0.28)");
+      sg.addColorStop(1, "rgba(125,211,252,0)");
+      ctx.fillStyle = sg;
+      ctx.fillRect(0, 0, W, H);
+
+      /* drifting clouds */
+      cloud(W * 0.22 + Math.sin(t * 0.08) * 10, H * 0.16, 0.85, 0.22);
+      cloud(W * 0.58 + Math.cos(t * 0.06) * 14, H * 0.12, 1.05, 0.18);
+      cloud(W * 0.88 + Math.sin(t * 0.05 + 1) * 8, H * 0.2, 0.7, 0.15);
+
+      /* distant island chain */
+      ctx.fillStyle = "#0B2A44";
+      ctx.beginPath();
+      ctx.moveTo(W * 0.08, H * 0.52);
+      ctx.quadraticCurveTo(W * 0.22, H * 0.32, W * 0.38, H * 0.5);
+      ctx.quadraticCurveTo(W * 0.48, H * 0.38, W * 0.58, H * 0.5);
+      ctx.quadraticCurveTo(W * 0.68, H * 0.42, W * 0.78, H * 0.52);
+      ctx.lineTo(W * 0.08, H * 0.52);
+      ctx.fill();
+      /* palm / green crown */
+      ctx.fillStyle = "#14B8A6";
+      ctx.globalAlpha = 0.55;
+      ctx.beginPath();
+      ctx.ellipse(W * 0.32, H * 0.43, 11, 6.5, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(W * 0.52, H * 0.44, 8, 5, 0.15, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      /* layered sea */
+      wave(H * 0.56, 6, 44, t * 0.95, 0.2, "rgba(0,152,234,0.52)");
+      wave(H * 0.64, 8, 38, t * 1.2, 1.05, "rgba(56,189,248,0.48)");
+      wave(H * 0.72, 10, 52, t * 0.85, 2.1, "rgba(20,184,166,0.4)");
+      wave(H * 0.8, 7, 40, t * 1.35, 0.65, "rgba(7,20,34,0.52)");
+
+      /* gentle boat drift */
+      var bx = W * (0.2 + ((t * 0.015) % 0.7));
+      var by = H * 0.58 + Math.sin(t * 0.9) * 3;
+      boat(bx, by, 0.95 + Math.sin(t) * 0.04);
+
+      /* dolphin hop ~ every 9s */
+      var cycle = t % 9;
+      if (cycle < 1.35) {
+        var p = cycle / 1.35;
+        var jump = Math.sin(p * Math.PI);
+        dolphin(W * (0.15 + p * 0.58), H * (0.62 - jump * 0.2), 1 + jump * 0.12, -0.32 + p * 0.65);
+      }
+
+      /* sparkles */
+      ctx.fillStyle = "rgba(255,255,255,0.6)";
+      for (var i = 0; i < 5; i++) {
+        var sx = (Math.sin(t * 0.55 + i * 1.9) * 0.5 + 0.5) * W;
+        var sy = H * 0.14 + (i % 3) * 14 + Math.cos(t * 0.8 + i) * 3;
+        ctx.globalAlpha = 0.2 + 0.35 * Math.abs(Math.sin(t * 1.6 + i));
+        ctx.beginPath();
+        ctx.arc(sx, sy, 1 + (i % 2), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      raf = requestAnimationFrame(frame);
+    }
+
+    function kick() {
+      if (!running || !visible) return;
+      resize();
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(frame);
+    }
+
     window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () { resize(); if (running) draw(performance.now()); }, 200);
+      clearTimeout(window.__gsSeaR);
+      window.__gsSeaR = setTimeout(kick, 140);
     }, { passive: true });
-    canvas.addEventListener("webglcontextlost", function (e) { e.preventDefault(); running = false; }, false);
-    sync();
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        running = false;
+        cancelAnimationFrame(raf);
+      } else {
+        running = true;
+        t0 = performance.now();
+        kick();
+      }
+    });
+
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        visible = !!(entries[0] && entries[0].isIntersecting);
+        if (visible) {
+          t0 = performance.now();
+          kick();
+        } else {
+          cancelAnimationFrame(raf);
+        }
+      }, { threshold: 0.05 });
+      io.observe(canvas);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", kick);
+    } else {
+      kick();
+    }
+  } catch (e) {
+    try { document.documentElement.classList.remove("gl-on"); } catch (_) {}
   }
-  var idle = window.requestIdleCallback || function (fn) { setTimeout(fn, 400); };
-  idle(boot, { timeout: 1200 });
 })();
