@@ -1,0 +1,37 @@
+name: seed-chunks
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seed-chunks
+  cancel-in-progress: false
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble p00-p08 from ._parts
+        run: |
+          set -euo pipefail
+          mkdir -p ._index_b64
+          for i in 00 01 02 03 04 05 06 07 08; do
+            cat ._parts/p${i}_* > ._index_b64/p${i}
+            wc -c ._index_b64/p${i}
+          done
+          rm -rf ._parts
+          python3 - <<'PY'
+          import pathlib,base64,gzip,hashlib
+          b64="".join(pathlib.Path(f"._index_b64/p{i:02d}").read_text() for i in range(9))
+          html=gzip.decompress(base64.b64decode(b64))
+          md5=hashlib.md5(html).hexdigest()
+          print(len(html), md5)
+          assert md5=="344a5d7d50a81c153783796ef011899c", md5
+          PY
+          rm -f index.html.gz.b64
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git status
+          git commit -m "Goship123 v2.3: assemble chunks from ._parts + drop empty gz.b64" || echo "no changes"
+          git push
