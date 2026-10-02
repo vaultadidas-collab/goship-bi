@@ -21,22 +21,19 @@ jobs:
       - name: Assemble index.html from staging
         run: |
           set -euo pipefail
-          if [ -s index.html.gz.b64 ]; then
+          if [ -d ._slices ] && ls ._slices/s* >/dev/null 2>&1; then
+            cat $(ls ._slices/s* | sort) | base64 -d | gzip -dc > index.html
+            rm -rf ._slices ._index_b64 ._parts
+          elif [ -s index.html.gz.b64 ]; then
             base64 -d index.html.gz.b64 | gzip -dc > index.html
             rm -f index.html.gz.b64
-          elif ls index.html.gz.b64.* >/dev/null 2>&1; then
-            cat $(ls index.html.gz.b64.* | sort -V) | base64 -d | gzip -dc > index.html
-            rm -f index.html.gz.b64.*
           elif [ -d ._index_b64 ]; then
             cat ._index_b64/p* | base64 -d | gzip -dc > index.html
             rm -rf ._index_b64
           fi
           test -s index.html
           wc -c index.html
-          # drop empty staging leftover
-          if [ -f index.html.gz.b64 ] && [ ! -s index.html.gz.b64 ]; then
-            rm -f index.html.gz.b64
-          fi
+          md5sum index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
