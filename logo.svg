@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Goship">
-  <rect width="64" height="64" rx="16" fill="#071422"/>
-  <path d="M8 40c6 4 10 4 16 0s10-4 16 0 10 4 16 0" fill="none" stroke="#0098EA" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M8 48c6 3 10 3 16 0s10-3 16 0 10 3 16 0" fill="none" stroke="#7DD3FC" stroke-width="2" stroke-linecap="round" opacity=".85"/>
-  <path d="M40 18c2 4-1 8-6 9 4 1 7 4 7 8-5 1-9-1-11-4 2 4-1 8-6 8 6-2 9-7 8-12 3-1 6-4 8-9z" fill="#F4FBFF"/>
-  <circle cx="36.5" cy="22.5" r="1.1" fill="#071422"/>
-</svg>
