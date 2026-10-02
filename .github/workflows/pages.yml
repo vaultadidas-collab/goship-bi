@@ -18,6 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Assemble index.html from gzip staging (if present)
+        run: |
+          if [ -f index.html.gz.b64 ]; then
+            base64 -d index.html.gz.b64 | gzip -dc > index.html
+            rm -f index.html.gz.b64
+          elif [ -d ._index_b64 ]; then
+            cat ._index_b64/p* | base64 -d | gzip -dc > index.html
+            rm -rf ._index_b64
+          fi
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
