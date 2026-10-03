@@ -1,0 +1,29 @@
+name: icon-fix
+on:
+  push:
+    branches: [icon-seo-svg]
+    paths:
+      - .github/workflows/icon-fix.yml
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: icon-seo-svg
+      - name: Verify and patch icons
+        run: |
+          set -euo pipefail
+          python3 .github/fix.py
+          rm -f .github/fix.py .github/workflows/icon-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "Verify icon pass and restore stripped rating stars"
+            git push origin HEAD:icon-seo-svg
+          fi
